@@ -1,6 +1,6 @@
 import Foundation
 
-public final class ConsoleApp {
+public class ConsoleApp {
     private let shelf: BookShelfProtocol
 
     public init(shelf: BookShelfProtocol) {
