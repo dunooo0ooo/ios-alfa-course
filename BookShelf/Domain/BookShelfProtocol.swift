@@ -1,9 +1,15 @@
 import Foundation
 
 public protocol BookShelfProtocol {
-    func add(title: String, author: String, year: Int) throws -> Book
+    func add(_ book: Book) throws
+    func delete(id: String) throws
     func list() -> [Book]
-    func get(id: UUID) throws -> Book
-    func delete(id: UUID) throws
-    func edit(id: UUID, newTitle: String?, newAuthor: String?, newYear: Int?) throws -> Book
+    func search(_ query: SearchQuery) -> [Book]
+    
+    func edit(id: String,
+              newTitle: String?,
+              newAuthor: String?,
+              newPublicationYear: Int?,
+              newGenre: Genre?,
+              newTags: [String]?) throws
 }

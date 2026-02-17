@@ -20,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		B25147EA2F4517AE00C75C96 /* BookShelf */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BookShelf; sourceTree = BUILT_PRODUCTS_DIR; };
+		B25148082F451BA700C75C96 /* lab-1.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "lab-1.md"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +45,7 @@
 		B25147E12F4517AE00C75C96 = {
 			isa = PBXGroup;
 			children = (
+				B25148082F451BA700C75C96 /* lab-1.md */,
 				B25147EC2F4517AE00C75C96 /* BookShelf */,
 				B25147EB2F4517AE00C75C96 /* Products */,
 			);

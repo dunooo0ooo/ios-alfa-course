@@ -10,15 +10,19 @@ public struct BookValidator {
         self.maxYear = maxYear
     }
 
-    public func validate(title: String, author: String, year: Int) throws {
+    public func validate(title: String, author: String, year: Int?) throws {
         if title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             throw BookShelfError.emptyTitle
         }
         if author.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             throw BookShelfError.emptyAuthor
         }
-        if year < minYear || year > maxYear {
+        if let y = year, (y < minYear || y > maxYear) {
             throw BookShelfError.invalidYear(min: minYear, max: maxYear)
         }
+    }
+
+    public func validate(_ book: Book) throws {
+        try validate(title: book.title, author: book.author, year: book.publicationYear)
     }
 }
