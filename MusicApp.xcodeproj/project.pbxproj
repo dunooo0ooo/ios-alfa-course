@@ -6,8 +6,41 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8D6E4F132F5F147A0070EDE3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8D6E4F122F5F14730070EDE3 /* README.md */; };
+		8D6E4F272F5F18660070EDE3 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F222F5F16C30070EDE3 /* AuthViewController.swift */; };
+		8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F212F5F16B50070EDE3 /* AuthViewState.swift */; };
+		8D6E4F292F5F18770070EDE3 /* AuthPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F232F5F16DD0070EDE3 /* AuthPresenter.swift */; };
+		8D6E4F2A2F5F187B0070EDE3 /* AuthInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F242F5F16EE0070EDE3 /* AuthInteractor.swift */; };
+		8D6E4F2B2F5F187F0070EDE3 /* AuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */; };
+		8D6E4F2C2F5F18A60070EDE3 /* AuthViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F1D2F5F15E70070EDE3 /* AuthViewProtocol.swift */; };
+		8D6E4F2D2F5F18A60070EDE3 /* AuthPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F1E2F5F16820070EDE3 /* AuthPresenterProtocol.swift */; };
+		8D6E4F2E2F5F18A60070EDE3 /* AuthInteractorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F1F2F5F16930070EDE3 /* AuthInteractorProtocol.swift */; };
+		8D6E4F2F2F5F18A60070EDE3 /* AuthRouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F202F5F16A30070EDE3 /* AuthRouterProtocol.swift */; };
+		8D6E4F302F5F18B30070EDE3 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F182F5F15800070EDE3 /* LoginRequest.swift */; };
+		8D6E4F312F5F18B30070EDE3 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F1A2F5F15C50070EDE3 /* UserSession.swift */; };
+		8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F192F5F15A40070EDE3 /* LoginResponse.swift */; };
+		8D6E4F332F5F1A9D0070EDE3 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F262F5F178D0070EDE3 /* AuthService.swift */; };
+		8D6E4F352F5F24100070EDE3 /* AuthModule.md in Resources */ = {isa = PBXBuildFile; fileRef = 8D6E4F342F5F24090070EDE3 /* AuthModule.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		8D6E4EF92F5F137C0070EDE3 /* MusicApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D6E4F122F5F14730070EDE3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		8D6E4F182F5F15800070EDE3 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
+		8D6E4F192F5F15A40070EDE3 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		8D6E4F1A2F5F15C50070EDE3 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
+		8D6E4F1D2F5F15E70070EDE3 /* AuthViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewProtocol.swift; sourceTree = "<group>"; };
+		8D6E4F1E2F5F16820070EDE3 /* AuthPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPresenterProtocol.swift; sourceTree = "<group>"; };
+		8D6E4F1F2F5F16930070EDE3 /* AuthInteractorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInteractorProtocol.swift; sourceTree = "<group>"; };
+		8D6E4F202F5F16A30070EDE3 /* AuthRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouterProtocol.swift; sourceTree = "<group>"; };
+		8D6E4F212F5F16B50070EDE3 /* AuthViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewState.swift; sourceTree = "<group>"; };
+		8D6E4F222F5F16C30070EDE3 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		8D6E4F232F5F16DD0070EDE3 /* AuthPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPresenter.swift; sourceTree = "<group>"; };
+		8D6E4F242F5F16EE0070EDE3 /* AuthInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInteractor.swift; sourceTree = "<group>"; };
+		8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
+		8D6E4F262F5F178D0070EDE3 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		8D6E4F342F5F24090070EDE3 /* AuthModule.md */ = {isa = PBXFileReference; explicitFileType = net.daringfireball.markdown; path = AuthModule.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,6 +78,10 @@
 		8D6E4EF02F5F137C0070EDE3 = {
 			isa = PBXGroup;
 			children = (
+				8D6E4F152F5F14FC0070EDE3 /* Models */,
+				8D6E4F142F5F14E50070EDE3 /* Services */,
+				8D6E4F122F5F14730070EDE3 /* README.md */,
+				8D6E4F112F5F14680070EDE3 /* Modules */,
 				8D6E4EFB2F5F137C0070EDE3 /* MusicApp */,
 				8D6E4EFA2F5F137C0070EDE3 /* Products */,
 			);
@@ -56,6 +93,65 @@
 				8D6E4EF92F5F137C0070EDE3 /* MusicApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8D6E4F112F5F14680070EDE3 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				8D6E4F162F5F152A0070EDE3 /* AuthModule */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		8D6E4F142F5F14E50070EDE3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8D6E4F262F5F178D0070EDE3 /* AuthService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8D6E4F152F5F14FC0070EDE3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8D6E4F162F5F152A0070EDE3 /* AuthModule */ = {
+			isa = PBXGroup;
+			children = (
+				8D6E4F342F5F24090070EDE3 /* AuthModule.md */,
+				8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */,
+				8D6E4F242F5F16EE0070EDE3 /* AuthInteractor.swift */,
+				8D6E4F232F5F16DD0070EDE3 /* AuthPresenter.swift */,
+				8D6E4F222F5F16C30070EDE3 /* AuthViewController.swift */,
+				8D6E4F212F5F16B50070EDE3 /* AuthViewState.swift */,
+				8D6E4F1B2F5F15D40070EDE3 /* Protocols */,
+				8D6E4F172F5F15790070EDE3 /* Models */,
+			);
+			path = AuthModule;
+			sourceTree = "<group>";
+		};
+		8D6E4F172F5F15790070EDE3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8D6E4F192F5F15A40070EDE3 /* LoginResponse.swift */,
+				8D6E4F1A2F5F15C50070EDE3 /* UserSession.swift */,
+				8D6E4F182F5F15800070EDE3 /* LoginRequest.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8D6E4F1B2F5F15D40070EDE3 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8D6E4F202F5F16A30070EDE3 /* AuthRouterProtocol.swift */,
+				8D6E4F1F2F5F16930070EDE3 /* AuthInteractorProtocol.swift */,
+				8D6E4F1E2F5F16820070EDE3 /* AuthPresenterProtocol.swift */,
+				8D6E4F1D2F5F15E70070EDE3 /* AuthViewProtocol.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,6 +218,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D6E4F132F5F147A0070EDE3 /* README.md in Resources */,
+				8D6E4F352F5F24100070EDE3 /* AuthModule.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +230,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D6E4F272F5F18660070EDE3 /* AuthViewController.swift in Sources */,
+				8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */,
+				8D6E4F2A2F5F187B0070EDE3 /* AuthInteractor.swift in Sources */,
+				8D6E4F2C2F5F18A60070EDE3 /* AuthViewProtocol.swift in Sources */,
+				8D6E4F2D2F5F18A60070EDE3 /* AuthPresenterProtocol.swift in Sources */,
+				8D6E4F2E2F5F18A60070EDE3 /* AuthInteractorProtocol.swift in Sources */,
+				8D6E4F2F2F5F18A60070EDE3 /* AuthRouterProtocol.swift in Sources */,
+				8D6E4F292F5F18770070EDE3 /* AuthPresenter.swift in Sources */,
+				8D6E4F2B2F5F187F0070EDE3 /* AuthRouter.swift in Sources */,
+				8D6E4F302F5F18B30070EDE3 /* LoginRequest.swift in Sources */,
+				8D6E4F312F5F18B30070EDE3 /* UserSession.swift in Sources */,
+				8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */,
+				8D6E4F332F5F1A9D0070EDE3 /* AuthService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
