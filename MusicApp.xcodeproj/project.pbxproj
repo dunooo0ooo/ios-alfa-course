@@ -7,6 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D11BDF92F620B250053F573 /* CatalogSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BDF82F620B1F0053F573 /* CatalogSection.swift */; };
+		8D11BDFB2F620B480053F573 /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BDFA2F620B430053F573 /* PlaylistItem.swift */; };
+		8D11BDFE2F620B6A0053F573 /* CatalogViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BDFD2F620B6A0053F573 /* CatalogViewProtocol.swift */; };
+		8D11BE002F620B800053F573 /* CatalogPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BDFF2F620B7F0053F573 /* CatalogPresenterProtocol.swift */; };
+		8D11BE022F620B8F0053F573 /* CatalogInteractorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE012F620B8F0053F573 /* CatalogInteractorProtocol.swift */; };
+		8D11BE042F620B9D0053F573 /* CatalogRouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE032F620B9D0053F573 /* CatalogRouterProtocol.swift */; };
+		8D11BE062F620BB00053F573 /* CatalogViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE052F620BB00053F573 /* CatalogViewState.swift */; };
+		8D11BE082F620BCE0053F573 /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE072F620BCE0053F573 /* CatalogViewController.swift */; };
+		8D11BE0A2F620C050053F573 /* CatalogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE092F620C030053F573 /* CatalogPresenter.swift */; };
+		8D11BE0C2F620C130053F573 /* CatalogInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE0B2F620C120053F573 /* CatalogInteractor.swift */; };
+		8D11BE0E2F620C4F0053F573 /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE0D2F620C4E0053F573 /* CatalogService.swift */; };
+		8D11BE132F620F690053F573 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE122F620F670053F573 /* Track.swift */; };
+		8D11BE152F620F7C0053F573 /* PlaylistDetailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE142F620F7C0053F573 /* PlaylistDetailData.swift */; };
+		8D11BE182F620FC20053F573 /* PlaylistDetailViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE172F620FC00053F573 /* PlaylistDetailViewProtocol.swift */; };
+		8D11BE1A2F620FD20053F573 /* PlaylistDetailPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE192F620FCF0053F573 /* PlaylistDetailPresenterProtocol.swift */; };
+		8D11BE1C2F620FE60053F573 /* PlaylistDetailInteractorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE1B2F620FE30053F573 /* PlaylistDetailInteractorProtocol.swift */; };
+		8D11BE1E2F620FF70053F573 /* PlaylistDetailRouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE1D2F620FF40053F573 /* PlaylistDetailRouterProtocol.swift */; };
+		8D11BE202F6210080053F573 /* PlaylistDetailViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE1F2F6210080053F573 /* PlaylistDetailViewState.swift */; };
+		8D11BE222F62101F0053F573 /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE212F62101E0053F573 /* PlaylistDetailViewController.swift */; };
+		8D11BE242F6210520053F573 /* PlaylistDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE232F6210510053F573 /* PlaylistDetailPresenter.swift */; };
+		8D11BE262F62105E0053F573 /* PlaylistDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE252F62105E0053F573 /* PlaylistDetailInteractor.swift */; };
+		8D11BE282F62107F0053F573 /* PlaylistDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE272F6210750053F573 /* PlaylistDetailRouter.swift */; };
+		8D11BE2A2F6210920053F573 /* PlaylistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11BE292F6210910053F573 /* PlaylistService.swift */; };
 		8D6E4F132F5F147A0070EDE3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8D6E4F122F5F14730070EDE3 /* README.md */; };
 		8D6E4F272F5F18660070EDE3 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F222F5F16C30070EDE3 /* AuthViewController.swift */; };
 		8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F212F5F16B50070EDE3 /* AuthViewState.swift */; };
@@ -21,10 +44,32 @@
 		8D6E4F312F5F18B30070EDE3 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F1A2F5F15C50070EDE3 /* UserSession.swift */; };
 		8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F192F5F15A40070EDE3 /* LoginResponse.swift */; };
 		8D6E4F332F5F1A9D0070EDE3 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F262F5F178D0070EDE3 /* AuthService.swift */; };
-		8D6E4F352F5F24100070EDE3 /* AuthModule.md in Resources */ = {isa = PBXBuildFile; fileRef = 8D6E4F342F5F24090070EDE3 /* AuthModule.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8D11BDF82F620B1F0053F573 /* CatalogSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogSection.swift; sourceTree = "<group>"; };
+		8D11BDFA2F620B430053F573 /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
+		8D11BDFD2F620B6A0053F573 /* CatalogViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewProtocol.swift; sourceTree = "<group>"; };
+		8D11BDFF2F620B7F0053F573 /* CatalogPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenterProtocol.swift; sourceTree = "<group>"; };
+		8D11BE012F620B8F0053F573 /* CatalogInteractorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogInteractorProtocol.swift; sourceTree = "<group>"; };
+		8D11BE032F620B9D0053F573 /* CatalogRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogRouterProtocol.swift; sourceTree = "<group>"; };
+		8D11BE052F620BB00053F573 /* CatalogViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewState.swift; sourceTree = "<group>"; };
+		8D11BE072F620BCE0053F573 /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewController.swift; sourceTree = "<group>"; };
+		8D11BE092F620C030053F573 /* CatalogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenter.swift; sourceTree = "<group>"; };
+		8D11BE0B2F620C120053F573 /* CatalogInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogInteractor.swift; sourceTree = "<group>"; };
+		8D11BE0D2F620C4E0053F573 /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; };
+		8D11BE122F620F670053F573 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		8D11BE142F620F7C0053F573 /* PlaylistDetailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailData.swift; sourceTree = "<group>"; };
+		8D11BE172F620FC00053F573 /* PlaylistDetailViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewProtocol.swift; sourceTree = "<group>"; };
+		8D11BE192F620FCF0053F573 /* PlaylistDetailPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailPresenterProtocol.swift; sourceTree = "<group>"; };
+		8D11BE1B2F620FE30053F573 /* PlaylistDetailInteractorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailInteractorProtocol.swift; sourceTree = "<group>"; };
+		8D11BE1D2F620FF40053F573 /* PlaylistDetailRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailRouterProtocol.swift; sourceTree = "<group>"; };
+		8D11BE1F2F6210080053F573 /* PlaylistDetailViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewState.swift; sourceTree = "<group>"; };
+		8D11BE212F62101E0053F573 /* PlaylistDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewController.swift; sourceTree = "<group>"; };
+		8D11BE232F6210510053F573 /* PlaylistDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailPresenter.swift; sourceTree = "<group>"; };
+		8D11BE252F62105E0053F573 /* PlaylistDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailInteractor.swift; sourceTree = "<group>"; };
+		8D11BE272F6210750053F573 /* PlaylistDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailRouter.swift; sourceTree = "<group>"; };
+		8D11BE292F6210910053F573 /* PlaylistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistService.swift; sourceTree = "<group>"; };
 		8D6E4EF92F5F137C0070EDE3 /* MusicApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D6E4F122F5F14730070EDE3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8D6E4F182F5F15800070EDE3 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
@@ -40,7 +85,6 @@
 		8D6E4F242F5F16EE0070EDE3 /* AuthInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInteractor.swift; sourceTree = "<group>"; };
 		8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
 		8D6E4F262F5F178D0070EDE3 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		8D6E4F342F5F24090070EDE3 /* AuthModule.md */ = {isa = PBXFileReference; explicitFileType = net.daringfireball.markdown; path = AuthModule.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -75,10 +119,76 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8D11BDF62F620AFE0053F573 /* CatalogModule */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE0B2F620C120053F573 /* CatalogInteractor.swift */,
+				8D11BE092F620C030053F573 /* CatalogPresenter.swift */,
+				8D11BE072F620BCE0053F573 /* CatalogViewController.swift */,
+				8D11BE052F620BB00053F573 /* CatalogViewState.swift */,
+				8D11BDFC2F620B5F0053F573 /* Protocols */,
+				8D11BDF72F620B0B0053F573 /* Models */,
+			);
+			path = CatalogModule;
+			sourceTree = "<group>";
+		};
+		8D11BDF72F620B0B0053F573 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BDFA2F620B430053F573 /* PlaylistItem.swift */,
+				8D11BDF82F620B1F0053F573 /* CatalogSection.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8D11BDFC2F620B5F0053F573 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE032F620B9D0053F573 /* CatalogRouterProtocol.swift */,
+				8D11BE012F620B8F0053F573 /* CatalogInteractorProtocol.swift */,
+				8D11BDFF2F620B7F0053F573 /* CatalogPresenterProtocol.swift */,
+				8D11BDFD2F620B6A0053F573 /* CatalogViewProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		8D11BE0F2F620F530053F573 /* PlaylistDetailModule */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE272F6210750053F573 /* PlaylistDetailRouter.swift */,
+				8D11BE252F62105E0053F573 /* PlaylistDetailInteractor.swift */,
+				8D11BE232F6210510053F573 /* PlaylistDetailPresenter.swift */,
+				8D11BE212F62101E0053F573 /* PlaylistDetailViewController.swift */,
+				8D11BE1F2F6210080053F573 /* PlaylistDetailViewState.swift */,
+				8D11BE162F620FB40053F573 /* Protocols */,
+				8D11BE102F620F580053F573 /* Models */,
+			);
+			path = PlaylistDetailModule;
+			sourceTree = "<group>";
+		};
+		8D11BE102F620F580053F573 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE142F620F7C0053F573 /* PlaylistDetailData.swift */,
+				8D11BE122F620F670053F573 /* Track.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8D11BE162F620FB40053F573 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE1D2F620FF40053F573 /* PlaylistDetailRouterProtocol.swift */,
+				8D11BE1B2F620FE30053F573 /* PlaylistDetailInteractorProtocol.swift */,
+				8D11BE192F620FCF0053F573 /* PlaylistDetailPresenterProtocol.swift */,
+				8D11BE172F620FC00053F573 /* PlaylistDetailViewProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		8D6E4EF02F5F137C0070EDE3 = {
 			isa = PBXGroup;
 			children = (
-				8D6E4F152F5F14FC0070EDE3 /* Models */,
 				8D6E4F142F5F14E50070EDE3 /* Services */,
 				8D6E4F122F5F14730070EDE3 /* README.md */,
 				8D6E4F112F5F14680070EDE3 /* Modules */,
@@ -98,6 +208,8 @@
 		8D6E4F112F5F14680070EDE3 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				8D11BE0F2F620F530053F573 /* PlaylistDetailModule */,
+				8D11BDF62F620AFE0053F573 /* CatalogModule */,
 				8D6E4F162F5F152A0070EDE3 /* AuthModule */,
 			);
 			path = Modules;
@@ -106,22 +218,16 @@
 		8D6E4F142F5F14E50070EDE3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				8D11BE292F6210910053F573 /* PlaylistService.swift */,
+				8D11BE0D2F620C4E0053F573 /* CatalogService.swift */,
 				8D6E4F262F5F178D0070EDE3 /* AuthService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
 		};
-		8D6E4F152F5F14FC0070EDE3 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		8D6E4F162F5F152A0070EDE3 /* AuthModule */ = {
 			isa = PBXGroup;
 			children = (
-				8D6E4F342F5F24090070EDE3 /* AuthModule.md */,
 				8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */,
 				8D6E4F242F5F16EE0070EDE3 /* AuthInteractor.swift */,
 				8D6E4F232F5F16DD0070EDE3 /* AuthPresenter.swift */,
@@ -219,7 +325,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D6E4F132F5F147A0070EDE3 /* README.md in Resources */,
-				8D6E4F352F5F24100070EDE3 /* AuthModule.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,18 +336,41 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D6E4F272F5F18660070EDE3 /* AuthViewController.swift in Sources */,
+				8D11BE182F620FC20053F573 /* PlaylistDetailViewProtocol.swift in Sources */,
 				8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */,
+				8D11BE1C2F620FE60053F573 /* PlaylistDetailInteractorProtocol.swift in Sources */,
 				8D6E4F2A2F5F187B0070EDE3 /* AuthInteractor.swift in Sources */,
+				8D11BE202F6210080053F573 /* PlaylistDetailViewState.swift in Sources */,
 				8D6E4F2C2F5F18A60070EDE3 /* AuthViewProtocol.swift in Sources */,
+				8D11BE022F620B8F0053F573 /* CatalogInteractorProtocol.swift in Sources */,
 				8D6E4F2D2F5F18A60070EDE3 /* AuthPresenterProtocol.swift in Sources */,
+				8D11BE1E2F620FF70053F573 /* PlaylistDetailRouterProtocol.swift in Sources */,
+				8D11BE0E2F620C4F0053F573 /* CatalogService.swift in Sources */,
+				8D11BE222F62101F0053F573 /* PlaylistDetailViewController.swift in Sources */,
 				8D6E4F2E2F5F18A60070EDE3 /* AuthInteractorProtocol.swift in Sources */,
+				8D11BE0C2F620C130053F573 /* CatalogInteractor.swift in Sources */,
+				8D11BDFB2F620B480053F573 /* PlaylistItem.swift in Sources */,
+				8D11BE2A2F6210920053F573 /* PlaylistService.swift in Sources */,
+				8D11BE062F620BB00053F573 /* CatalogViewState.swift in Sources */,
+				8D11BE002F620B800053F573 /* CatalogPresenterProtocol.swift in Sources */,
+				8D11BE132F620F690053F573 /* Track.swift in Sources */,
 				8D6E4F2F2F5F18A60070EDE3 /* AuthRouterProtocol.swift in Sources */,
+				8D11BDFE2F620B6A0053F573 /* CatalogViewProtocol.swift in Sources */,
 				8D6E4F292F5F18770070EDE3 /* AuthPresenter.swift in Sources */,
+				8D11BE242F6210520053F573 /* PlaylistDetailPresenter.swift in Sources */,
+				8D11BE152F620F7C0053F573 /* PlaylistDetailData.swift in Sources */,
+				8D11BE262F62105E0053F573 /* PlaylistDetailInteractor.swift in Sources */,
 				8D6E4F2B2F5F187F0070EDE3 /* AuthRouter.swift in Sources */,
+				8D11BE082F620BCE0053F573 /* CatalogViewController.swift in Sources */,
 				8D6E4F302F5F18B30070EDE3 /* LoginRequest.swift in Sources */,
+				8D11BE1A2F620FD20053F573 /* PlaylistDetailPresenterProtocol.swift in Sources */,
+				8D11BE042F620B9D0053F573 /* CatalogRouterProtocol.swift in Sources */,
 				8D6E4F312F5F18B30070EDE3 /* UserSession.swift in Sources */,
+				8D11BE0A2F620C050053F573 /* CatalogPresenter.swift in Sources */,
 				8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */,
+				8D11BE282F62107F0053F573 /* PlaylistDetailRouter.swift in Sources */,
 				8D6E4F332F5F1A9D0070EDE3 /* AuthService.swift in Sources */,
+				8D11BDF92F620B250053F573 /* CatalogSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
