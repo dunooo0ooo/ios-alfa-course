@@ -1,6 +1,7 @@
 import UIKit
 
 final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate {
+    
     var presenter: AuthPresenterInput?
     
     private let scrollView = UIScrollView()
@@ -10,8 +11,7 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     private let passwordTextField = UITextField()
     private let loginButton = UIButton(type: .system)
     private let errorLabel = UILabel()
-    
-    private var loginButtonBottomConstraint: NSLayoutConstraint!
+    private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,6 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        scrollView.contentSize = contentView.bounds.size
     }
     
     private func setupUI() {
@@ -58,6 +57,10 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
         errorLabel.alpha = 0
         contentView.addSubview(errorLabel)
         
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(activityIndicator)
+        
         loginButton.setTitle("Войти", for: .normal)
         loginButton.setTitleColor(.white, for: .normal)
         loginButton.backgroundColor = .systemBlue
@@ -65,7 +68,6 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         contentView.addSubview(loginButton)
-        
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -77,7 +79,6 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            
             contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             
             emailTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
@@ -91,12 +92,21 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             errorLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 8),
             errorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             errorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
+
+            activityIndicator.centerYAnchor.constraint(equalTo: loginButton.centerYAnchor),
+            activityIndicator.leadingAnchor.constraint(equalTo: loginButton.trailingAnchor, constant: 8),
+
             loginButton.topAnchor.constraint(equalTo: errorLabel.bottomAnchor, constant: 20),
             loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -40)
         ])
+        
+        emailTextField.accessibilityIdentifier = "emailTextField"
+        passwordTextField.accessibilityIdentifier = "passwordTextField"
+        loginButton.accessibilityIdentifier = "loginButton"
+        errorLabel.accessibilityIdentifier = "errorLabel"
+        activityIndicator.accessibilityIdentifier = "activityIndicator"
     }
     
     private func setupKeyboardObservers() {
@@ -113,14 +123,11 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             let userInfo = note.userInfo,
             let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
         else { return }
-        
         let keyboardInView = view.convert(endFrame, from: nil)
         let intersection = view.bounds.intersection(keyboardInView)
         let inset = intersection.height
-        
         scrollView.contentInset.bottom = inset
         scrollView.scrollIndicatorInsets.bottom = inset
-        
         if let activeField = findActiveTextField(),
            activeField.frame.maxY > keyboardInView.minY {
             scrollView.scrollRectToVisible(activeField.frame, animated: true)
@@ -149,6 +156,24 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
         return true
     }
     
+    func textFieldDidChange(_ textField: UITextField) {
+        if textField == emailTextField {
+            let isValid = isValidEmail(emailTextField.text ?? "")
+            updateTextFieldBorder(emailTextField, isValid: isValid)
+        }
+    }
+    
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return predicate.evaluate(with: email)
+    }
+    
+    private func updateTextFieldBorder(_ textField: UITextField, isValid: Bool) {
+        textField.layer.borderWidth = isValid ? 0 : 1
+        textField.layer.borderColor = isValid ? nil : UIColor.systemRed.cgColor
+    }
+    
     func render(_ state: AuthViewState) {
         switch state {
         case .initial:
@@ -157,16 +182,23 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             errorLabel.alpha = 0
             loginButton.isEnabled = true
             loginButton.alpha = 1.0
+            activityIndicator.stopAnimating()
+            updateTextFieldBorder(emailTextField, isValid: true)
+            updateTextFieldBorder(passwordTextField, isValid: true)
             
         case .loading:
             loginButton.isEnabled = false
             loginButton.alpha = 0.5
+            activityIndicator.startAnimating()
             
         case .content(let email):
             emailTextField.text = email
             errorLabel.alpha = 0
             loginButton.isEnabled = true
             loginButton.alpha = 1.0
+            activityIndicator.stopAnimating()
+            updateTextFieldBorder(emailTextField, isValid: true)
+            updateTextFieldBorder(passwordTextField, isValid: true)
             
         case .error(let message):
             errorLabel.text = message
@@ -175,6 +207,11 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             }
             loginButton.isEnabled = true
             loginButton.alpha = 1.0
+            activityIndicator.stopAnimating()
+            let isValidEmail = self.isValidEmail(self.emailTextField.text ?? "")
+            let isValidPassword = ((self.passwordTextField.text) == nil)
+            self.updateTextFieldBorder(self.emailTextField, isValid: isValidEmail)
+            self.updateTextFieldBorder(self.passwordTextField, isValid: isValidPassword)
         }
     }
     
