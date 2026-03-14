@@ -66,21 +66,24 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         contentView.addSubview(loginButton)
         
+        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
+            
             contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-
+            
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            
             emailTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
             emailTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             emailTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-
+            
             passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20),
             passwordTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             passwordTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
@@ -92,9 +95,7 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             loginButton.topAnchor.constraint(equalTo: errorLabel.bottomAnchor, constant: 20),
             loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            loginButton.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor, constant: -40
-            )
+            loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -40)
         ])
     }
     
