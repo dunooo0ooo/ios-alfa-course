@@ -1,7 +1,7 @@
 
 class AuthInteractor: AuthInteractorInput {
     var presenter: AuthInteractorOutput?
-    var service: AuthService?
+    var service: AuthServiceProtocol?
 
     func login(email: String, password: String) {
         Task {

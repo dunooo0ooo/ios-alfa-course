@@ -43,7 +43,8 @@
 		8D6E4F302F5F18B30070EDE3 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F182F5F15800070EDE3 /* LoginRequest.swift */; };
 		8D6E4F312F5F18B30070EDE3 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F1A2F5F15C50070EDE3 /* UserSession.swift */; };
 		8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F192F5F15A40070EDE3 /* LoginResponse.swift */; };
-		8D6E4F332F5F1A9D0070EDE3 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F262F5F178D0070EDE3 /* AuthService.swift */; };
+		8D6E4F332F5F1A9D0070EDE3 /* AuthServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F262F5F178D0070EDE3 /* AuthServiceProtocol.swift */; };
+		8D9D6A622F657703009EA59C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9D6A612F657361009EA59C /* AuthService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,7 +85,8 @@
 		8D6E4F232F5F16DD0070EDE3 /* AuthPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPresenter.swift; sourceTree = "<group>"; };
 		8D6E4F242F5F16EE0070EDE3 /* AuthInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInteractor.swift; sourceTree = "<group>"; };
 		8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
-		8D6E4F262F5F178D0070EDE3 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		8D6E4F262F5F178D0070EDE3 /* AuthServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceProtocol.swift; sourceTree = "<group>"; };
+		8D9D6A612F657361009EA59C /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -218,9 +220,9 @@
 		8D6E4F142F5F14E50070EDE3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				8D11BE292F6210910053F573 /* PlaylistService.swift */,
-				8D11BE0D2F620C4E0053F573 /* CatalogService.swift */,
-				8D6E4F262F5F178D0070EDE3 /* AuthService.swift */,
+				8D9D6A692F659020009EA59C /* Playlist */,
+				8D9D6A672F659009009EA59C /* Catalog */,
+				8D9D6A652F658FED009EA59C /* Auth */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -256,6 +258,55 @@
 				8D6E4F1F2F5F16930070EDE3 /* AuthInteractorProtocol.swift */,
 				8D6E4F1E2F5F16820070EDE3 /* AuthPresenterProtocol.swift */,
 				8D6E4F1D2F5F15E70070EDE3 /* AuthViewProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		8D9D6A652F658FED009EA59C /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				8D9D6A662F658FF4009EA59C /* Protocols */,
+				8D9D6A612F657361009EA59C /* AuthService.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		8D9D6A662F658FF4009EA59C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8D6E4F262F5F178D0070EDE3 /* AuthServiceProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		8D9D6A672F659009009EA59C /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				8D9D6A682F659018009EA59C /* Protocols */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		8D9D6A682F659018009EA59C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE0D2F620C4E0053F573 /* CatalogService.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		8D9D6A692F659020009EA59C /* Playlist */ = {
+			isa = PBXGroup;
+			children = (
+				8D9D6A6A2F659027009EA59C /* Protocols */,
+			);
+			path = Playlist;
+			sourceTree = "<group>";
+		};
+		8D9D6A6A2F659027009EA59C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8D11BE292F6210910053F573 /* PlaylistService.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -339,6 +390,7 @@
 				8D11BE182F620FC20053F573 /* PlaylistDetailViewProtocol.swift in Sources */,
 				8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */,
 				8D11BE1C2F620FE60053F573 /* PlaylistDetailInteractorProtocol.swift in Sources */,
+				8D9D6A622F657703009EA59C /* AuthService.swift in Sources */,
 				8D6E4F2A2F5F187B0070EDE3 /* AuthInteractor.swift in Sources */,
 				8D11BE202F6210080053F573 /* PlaylistDetailViewState.swift in Sources */,
 				8D6E4F2C2F5F18A60070EDE3 /* AuthViewProtocol.swift in Sources */,
@@ -369,7 +421,7 @@
 				8D11BE0A2F620C050053F573 /* CatalogPresenter.swift in Sources */,
 				8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */,
 				8D11BE282F62107F0053F573 /* PlaylistDetailRouter.swift in Sources */,
-				8D6E4F332F5F1A9D0070EDE3 /* AuthService.swift in Sources */,
+				8D6E4F332F5F1A9D0070EDE3 /* AuthServiceProtocol.swift in Sources */,
 				8D11BDF92F620B250053F573 /* CatalogSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
