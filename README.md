@@ -61,8 +61,9 @@ enum AuthViewState: Equatable {
 ### Состояния UI  
 ```swift
 enum CatalogViewState: Equatable {
+    case idle
     case loading
-    case content(sections: [CatalogSection])
+    case content([PlaylistCellViewModel])
     case empty
     case error(message: String)
 }
@@ -72,10 +73,10 @@ enum CatalogViewState: Equatable {
 1. **Открытие экрана после входа**  
    - Получаем `userId`  
    - Состояние: `.loading`  
-   - Загружаем данные через `CatalogService`  
+   - Асинхронно загружаем данные через `CatalogService` (`Task`, UI не блокируется)  
 2. **Данные загружены успешно**  
-   - Состояние: `.content([CatalogSection])`  
-   - Отображаем секции: "Рекомендации", "Популярные", "Новые"  
+   - Состояние: `.content([PlaylistCellViewModel])`  
+   - В UI-слое только готовые ячейки (без DTO и парсинга)  
 3. **Пользователь выбирает плейлист**  
    - Вызывается `presenter.didSelectPlaylist(playlistId)`  
    - Router открывает `PlaylistDetailModule`  
@@ -85,9 +86,39 @@ enum CatalogViewState: Equatable {
 
 ### Протоколы  
 - `CatalogView` — UI отображает состояние через `render(_:)`  
-- `CatalogPresenter` — Обрабатывает события: выбор плейлиста, выход  
-- `CatalogInteractor` — Загружает данные через `CatalogService`  
+- `CatalogPresenter` — Обрабатывает события: выбор плейлиста, выход; маппит ошибки сети в текст для UI  
+- `CatalogInteractor` — Загружает данные через `CatalogService`, маппит доменные модели в `PlaylistCellViewModel`; повторный вызов загрузки отменяет предыдущий `Task`  
 - `CatalogRouter` — Управляет навигацией: переход в детали или выход  
+
+### Лабораторная 4 — сеть и ViewModel списка
+
+**API:** публичный [Discogs Database API](https://www.discogs.com/developers#page:database,search:database) — поиск по каталогу релизов. Для простых запросов **отдельный API-ключ не обязателен**, но нужен осмысленный **User-Agent** (у нас задаётся в `URLSessionNetworkClient`).
+
+**Endpoint:** `GET https://api.discogs.com/database/search`  
+Параметры в `RemoteCatalogService`: `q` (поисковая строка, по умолчанию `rock`), `type=release`, `per_page=30`.  
+Ответ — JSON с полем **`results`**: массив найденных релизов (плюс блок `pagination`, для Codable декодируем только `results`).
+
+**Пример в браузере (может потребоваться заголовок User-Agent):** см. [документацию Discogs](https://www.discogs.com/developers#page:database,search:database).
+
+**Цепочка данных:** `DiscogsSearchResponseDTO` / `DiscogsSearchResultDTO` (Codable, для `cover_image` используется `CodingKeys`) → `CatalogListItem` → `PlaylistCellViewModel`.
+
+**Поля `PlaylistCellViewModel` (что пойдёт в ячейку в лабе 5):**
+
+| Поле | Источник из API |
+|------|-----------------|
+| `id` | `id` релиза (число в JSON → строка) |
+| `title` | `title` |
+| `subtitle` | `country` и `type` (например `US · release`) |
+| `rightText` | `year` |
+| `imageURL` | `cover_image`, иначе `thumb` |
+
+**Ошибки:** тип `NetworkError` (сеть/таймаут, не-2xx, декодирование); во view уходит строка из `userMessage`.
+
+**Офлайн / лимиты API:** при ошибке сети или декодирования подставляется `MusicApp/catalog_fallback.json` в формате Discogs (`results`).
+
+**Как проверить:** запустить приложение, войти (`user@example.com` / `password123`), открыть каталог. В консоли Xcode — лог из `CatalogViewController.render`.
+
+**Сетевой клиент:** протокол `NetworkClient`, реализация `URLSessionNetworkClient` (async/await, `User-Agent`, таймаут, `JSONDecoder`).
 
 ---
 

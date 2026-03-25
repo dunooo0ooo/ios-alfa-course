@@ -15,10 +15,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         interactor.service = AuthService()
 
-        viewController.presenter = presenter
+        viewController.interactor = interactor
         presenter.view = viewController
         presenter.router = router
-        presenter.interactor = interactor
         interactor.presenter = presenter
         router.viewController = viewController
 

@@ -1,3 +1,5 @@
+import Foundation
+import UIKit
 
 class PlaylistDetailInteractor: PlaylistDetailInteractorInput {
     var presenter: PlaylistDetailInteractorOutput?
@@ -6,8 +8,14 @@ class PlaylistDetailInteractor: PlaylistDetailInteractorInput {
     func loadTracks(for playlistId: String) {
         Task {
             do {
-                let data = try await service?.fetchPlaylistDetail(for: playlistId)
-                guard let tracks = data?.tracks else { return }
+                guard let service else {
+                    await MainActor.run {
+                        presenter?.tracksLoadFailed(with: NSError(domain: "Playlist", code: -1))
+                    }
+                    return
+                }
+                let data = try await service.fetchPlaylistDetail(for: playlistId)
+                let tracks = data?.tracks ?? []
                 await MainActor.run {
                     presenter?.tracksDidLoaded(tracks, currentIndex: nil)
                 }

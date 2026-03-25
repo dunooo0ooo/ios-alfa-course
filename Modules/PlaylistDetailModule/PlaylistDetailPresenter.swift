@@ -1,3 +1,4 @@
+import UIKit
 
 class PlaylistDetailPresenter: PlaylistDetailPresenterInput {
     weak var view: PlaylistDetailView?
@@ -19,5 +20,28 @@ class PlaylistDetailPresenter: PlaylistDetailPresenterInput {
 
     func didTapBack() {
         router?.navigateBack()
+    }
+}
+
+extension PlaylistDetailPresenter: PlaylistDetailInteractorOutput {
+    func tracksDidLoaded(_ tracks: [Track], currentIndex: Int?) {
+        if tracks.isEmpty {
+            view?.render(.empty)
+        } else {
+            view?.render(.content(tracks: tracks, isPlaying: false, currentIndex: currentIndex))
+        }
+    }
+
+    func tracksLoadFailed(with error: Error) {
+        view?.render(.error(message: error.localizedDescription))
+    }
+
+    func playbackStarted(at index: Int) {
+        // UI обновим
+        _ = index
+    }
+
+    func favoriteToggled(for trackId: String, isFavorite: Bool) {
+        _ = (trackId, isFavorite)
     }
 }

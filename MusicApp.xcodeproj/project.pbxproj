@@ -45,6 +45,15 @@
 		8D6E4F322F5F18B30070EDE3 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F192F5F15A40070EDE3 /* LoginResponse.swift */; };
 		8D6E4F332F5F1A9D0070EDE3 /* AuthServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E4F262F5F178D0070EDE3 /* AuthServiceProtocol.swift */; };
 		8D9D6A622F657703009EA59C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9D6A612F657361009EA59C /* AuthService.swift */; };
+		8DABAA022F7200010053F573 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA012F7200010053F573 /* NetworkClient.swift */; };
+		8DABAA042F7200020053F573 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA032F7200020053F573 /* NetworkError.swift */; };
+		8DABAA062F7200030053F573 /* URLSessionNetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA052F7200030053F573 /* URLSessionNetworkClient.swift */; };
+		8DABAA082F7200040053F573 /* DiscogsSearchDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA072F7200040053F573 /* DiscogsSearchDTO.swift */; };
+		8DABAA0A2F7200050053F573 /* RemoteCatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA092F7200050053F573 /* RemoteCatalogService.swift */; };
+		8DABAA0C2F7200060053F573 /* CatalogListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA0B2F7200060053F573 /* CatalogListItem.swift */; };
+		8DABAA0E2F7200070053F573 /* PlaylistCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA0D2F7200070053F573 /* PlaylistCellViewModel.swift */; };
+		8DABAA102F7200080053F573 /* StubPlaylistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA0F2F7200080053F573 /* StubPlaylistService.swift */; };
+		8DABAA122F7200090053F573 /* CatalogRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA112F7200090053F573 /* CatalogRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +96,15 @@
 		8D6E4F252F5F16FD0070EDE3 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
 		8D6E4F262F5F178D0070EDE3 /* AuthServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceProtocol.swift; sourceTree = "<group>"; };
 		8D9D6A612F657361009EA59C /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		8DABAA012F7200010053F573 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		8DABAA032F7200020053F573 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		8DABAA052F7200030053F573 /* URLSessionNetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkClient.swift; sourceTree = "<group>"; };
+		8DABAA072F7200040053F573 /* DiscogsSearchDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscogsSearchDTO.swift; sourceTree = "<group>"; };
+		8DABAA092F7200050053F573 /* RemoteCatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogService.swift; sourceTree = "<group>"; };
+		8DABAA0B2F7200060053F573 /* CatalogListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogListItem.swift; sourceTree = "<group>"; };
+		8DABAA0D2F7200070053F573 /* PlaylistCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCellViewModel.swift; sourceTree = "<group>"; };
+		8DABAA0F2F7200080053F573 /* StubPlaylistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubPlaylistService.swift; sourceTree = "<group>"; };
+		8DABAA112F7200090053F573 /* CatalogRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogRouter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -124,6 +142,7 @@
 		8D11BDF62F620AFE0053F573 /* CatalogModule */ = {
 			isa = PBXGroup;
 			children = (
+				8DABAA112F7200090053F573 /* CatalogRouter.swift */,
 				8D11BE0B2F620C120053F573 /* CatalogInteractor.swift */,
 				8D11BE092F620C030053F573 /* CatalogPresenter.swift */,
 				8D11BE072F620BCE0053F573 /* CatalogViewController.swift */,
@@ -137,6 +156,8 @@
 		8D11BDF72F620B0B0053F573 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8DABAA0B2F7200060053F573 /* CatalogListItem.swift */,
+				8DABAA0D2F7200070053F573 /* PlaylistCellViewModel.swift */,
 				8D11BDFA2F620B430053F573 /* PlaylistItem.swift */,
 				8D11BDF82F620B1F0053F573 /* CatalogSection.swift */,
 			);
@@ -220,6 +241,7 @@
 		8D6E4F142F5F14E50070EDE3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				8DABAA132F72000A0053F573 /* Network */,
 				8D9D6A692F659020009EA59C /* Playlist */,
 				8D9D6A672F659009009EA59C /* Catalog */,
 				8D9D6A652F658FED009EA59C /* Auth */,
@@ -282,6 +304,8 @@
 		8D9D6A672F659009009EA59C /* Catalog */ = {
 			isa = PBXGroup;
 			children = (
+				8DABAA072F7200040053F573 /* DiscogsSearchDTO.swift */,
+				8DABAA092F7200050053F573 /* RemoteCatalogService.swift */,
 				8D9D6A682F659018009EA59C /* Protocols */,
 			);
 			path = Catalog;
@@ -298,6 +322,7 @@
 		8D9D6A692F659020009EA59C /* Playlist */ = {
 			isa = PBXGroup;
 			children = (
+				8DABAA0F2F7200080053F573 /* StubPlaylistService.swift */,
 				8D9D6A6A2F659027009EA59C /* Protocols */,
 			);
 			path = Playlist;
@@ -307,6 +332,24 @@
 			isa = PBXGroup;
 			children = (
 				8D11BE292F6210910053F573 /* PlaylistService.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		8DABAA132F72000A0053F573 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				8DABAA032F7200020053F573 /* NetworkError.swift */,
+				8DABAA052F7200030053F573 /* URLSessionNetworkClient.swift */,
+				8DABAA142F72000B0053F573 /* Protocols */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		8DABAA142F72000B0053F573 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8DABAA012F7200010053F573 /* NetworkClient.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -386,6 +429,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DABAA022F7200010053F573 /* NetworkClient.swift in Sources */,
+				8DABAA042F7200020053F573 /* NetworkError.swift in Sources */,
+				8DABAA062F7200030053F573 /* URLSessionNetworkClient.swift in Sources */,
+				8DABAA082F7200040053F573 /* DiscogsSearchDTO.swift in Sources */,
+				8DABAA0A2F7200050053F573 /* RemoteCatalogService.swift in Sources */,
+				8DABAA0C2F7200060053F573 /* CatalogListItem.swift in Sources */,
+				8DABAA0E2F7200070053F573 /* PlaylistCellViewModel.swift in Sources */,
+				8DABAA102F7200080053F573 /* StubPlaylistService.swift in Sources */,
+				8DABAA122F7200090053F573 /* CatalogRouter.swift in Sources */,
 				8D6E4F272F5F18660070EDE3 /* AuthViewController.swift in Sources */,
 				8D11BE182F620FC20053F573 /* PlaylistDetailViewProtocol.swift in Sources */,
 				8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */,
