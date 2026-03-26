@@ -1,10 +1,10 @@
 import Foundation
 
-struct DiscogsSearchResponseDTO: Codable, Sendable {
+struct DiscogsSearchResponseDTO: Decodable, Sendable {
     let results: [DiscogsSearchResultDTO]
 }
 
-struct DiscogsSearchResultDTO: Codable, Sendable {
+struct DiscogsSearchResultDTO: Decodable, Sendable {
     let id: Int
     let type: String?
     let title: String?
