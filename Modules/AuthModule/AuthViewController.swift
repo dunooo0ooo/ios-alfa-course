@@ -115,8 +115,6 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             errorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
             activityIndicator.centerYAnchor.constraint(equalTo: loginButton.centerYAnchor),
-            // Кнопка занимает почти всю ширину, поэтому индикатор справа "уезжает" за экран.
-            // Центрируем его относительно кнопки.
             activityIndicator.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor),
 
             loginButton.topAnchor.constraint(equalTo: errorLabel.bottomAnchor, constant: 20),

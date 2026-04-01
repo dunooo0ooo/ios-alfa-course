@@ -25,7 +25,6 @@ struct PlaylistCellViewModel: Equatable, Sendable {
         )
     }
 
-    /// Локальная фильтрация без повторного сетевого запроса (лаб. 5, D2).
     static func filtered(_ items: [PlaylistCellViewModel], matching query: String) -> [PlaylistCellViewModel] {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty { return items }
