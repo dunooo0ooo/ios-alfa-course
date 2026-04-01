@@ -24,4 +24,17 @@ struct PlaylistCellViewModel: Equatable, Sendable {
             imageURL: item.artworkURL
         )
     }
+
+    /// Локальная фильтрация без повторного сетевого запроса (лаб. 5, D2).
+    static func filtered(_ items: [PlaylistCellViewModel], matching query: String) -> [PlaylistCellViewModel] {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty { return items }
+        let q = trimmed.lowercased()
+        return items.filter {
+            $0.title.lowercased().contains(q)
+                || ($0.subtitle?.lowercased().contains(q) ?? false)
+                || ($0.rightText?.lowercased().contains(q) ?? false)
+                || $0.id.lowercased().contains(q)
+        }
+    }
 }

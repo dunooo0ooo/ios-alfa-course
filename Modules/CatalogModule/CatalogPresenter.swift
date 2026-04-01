@@ -2,22 +2,38 @@ class CatalogPresenter: CatalogInteractorOutput {
     weak var view: CatalogView?
     var router: CatalogRouterInput?
 
-    func catalogDidStartLoading() {
-        view?.render(.loading)
-    }
-
-    func catalogDidLoad(_ items: [PlaylistCellViewModel]) {
-        if items.isEmpty {
-            view?.render(.empty)
+    func catalogDidStartLoading(isRefresh: Bool) {
+        if isRefresh {
+            view?.setRefreshing(true)
         } else {
-            view?.render(.content(items))
+            view?.render(.loading)
         }
     }
 
+    func catalogDidLoad(_ items: [PlaylistCellViewModel]) {
+        view?.setRefreshing(false)
+        view?.render(.content(items))
+    }
+
+    func catalogServerReturnedNoData() {
+        view?.setRefreshing(false)
+        view?.render(.empty(message: "Нет данных"))
+    }
+
+    func catalogSearchFilterReturnedNoMatches() {
+        view?.setRefreshing(false)
+        view?.render(.empty(message: "Ничего не найдено"))
+    }
+
     func catalogLoadFailed(with error: Error) {
+        view?.setRefreshing(false)
         let mapped = (error as? NetworkError) ?? NetworkError.map(error)
         if mapped == .cancelled { return }
         view?.render(.error(message: mapped.userMessage))
+    }
+
+    func catalogRefreshDidCancel() {
+        view?.setRefreshing(false)
     }
 
     func openPlaylistDetail(with playlistId: String) {

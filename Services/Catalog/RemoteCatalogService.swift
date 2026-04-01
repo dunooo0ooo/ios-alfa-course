@@ -17,7 +17,7 @@ final class RemoteCatalogService: CatalogService, @unchecked Sendable {
         components.queryItems = [
             URLQueryItem(name: "q", value: searchTerm),
             URLQueryItem(name: "type", value: "release"),
-            URLQueryItem(name: "per_page", value: "30"),
+            URLQueryItem(name: "per_page", value: "100"),
         ]
         guard let url = components.url else {
             throw NetworkError.invalidURL
@@ -54,11 +54,15 @@ final class RemoteCatalogService: CatalogService, @unchecked Sendable {
     }
 
     private static func mapDTOToDomain(_ dto: DiscogsSearchResultDTO) -> CatalogListItem? {
-        guard let title = dto.title, !title.isEmpty else { return nil }
+        guard let rawTitle = dto.title, !rawTitle.isEmpty else { return nil }
+
+        let parsed = splitDiscogsTitle(rawTitle)
 
         let id = String(dto.id)
         let subtitle: String?
-        if let country = dto.country, !country.isEmpty, let kind = dto.type, !kind.isEmpty {
+        if let artist = parsed.artist {
+            subtitle = artist
+        } else if let country = dto.country, !country.isEmpty, let kind = dto.type, !kind.isEmpty {
             subtitle = "\(country) · \(kind)"
         } else {
             subtitle = dto.country ?? dto.type
@@ -66,15 +70,26 @@ final class RemoteCatalogService: CatalogService, @unchecked Sendable {
 
         let rightText: String? = dto.year.flatMap { $0.isEmpty ? nil : $0 }
 
-        let imageURLString = dto.coverImage ?? dto.thumb
-        let imageURL = imageURLString.flatMap(URL.init(string:))
-
         return CatalogListItem(
             id: id,
-            title: title,
+            title: parsed.title,
             subtitle: subtitle,
             detailLine: rightText,
-            artworkURL: imageURL
+            artworkURL: nil
         )
+    }
+
+    private static func splitDiscogsTitle(_ rawTitle: String) -> (artist: String?, title: String) {
+        let parts = rawTitle
+            .split(separator: "-", maxSplits: 1, omittingEmptySubsequences: false)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+        guard parts.count == 2 else {
+            return (artist: nil, title: rawTitle)
+        }
+
+        let artist = parts[0].isEmpty ? nil : parts[0]
+        let title = parts[1].isEmpty ? rawTitle : parts[1]
+        return (artist: artist, title: title)
     }
 }

@@ -64,7 +64,7 @@ enum CatalogViewState: Equatable {
     case idle
     case loading
     case content([PlaylistCellViewModel])
-    case empty
+    case empty(message: String)
     case error(message: String)
 }
 ```
@@ -78,24 +78,25 @@ enum CatalogViewState: Equatable {
    - Состояние: `.content([PlaylistCellViewModel])`  
    - В UI-слое только готовые ячейки (без DTO и парсинга)  
 3. **Пользователь выбирает плейлист**  
-   - Вызывается `presenter.didSelectPlaylist(playlistId)`  
+   - Вызывается `interactor.didSelectPlaylist(playlistId)`  
    - Router открывает `PlaylistDetailModule`  
 4. **Пользователь нажимает "Выйти"**  
-   - Вызывается `presenter.didTapLogout()`  
+   - Вызывается `interactor.didTapLogout()`  
    - Router возвращает в `AuthModule`
 
 ### Протоколы  
-- `CatalogView` — UI отображает состояние через `render(_:)`  
-- `CatalogPresenter` — Обрабатывает события: выбор плейлиста, выход; маппит ошибки сети в текст для UI  
-- `CatalogInteractor` — Загружает данные через `CatalogService`, маппит доменные модели в `PlaylistCellViewModel`; повторный вызов загрузки отменяет предыдущий `Task`  
+- `CatalogView` — UI отображает состояние через `render(_:)` и управляет `UIRefreshControl` через `setRefreshing(_)`  
+- `CatalogPresenter` — Состояния и маппинг `NetworkError` в текст; навигация через router  
+- `CatalogInteractor` — Загрузка через `CatalogService`, кэш списка, локальный поиск без сети, `loadCatalog(..., isRefresh:)`  
 - `CatalogRouter` — Управляет навигацией: переход в детали или выход  
+- `CatalogListManager` — `UITableView` data source / delegate, reuse, делегирует выбор наружу  
 
 ### Лабораторная 4 — сеть и ViewModel списка
 
 **API:** публичный [Discogs Database API](https://www.discogs.com/developers#page:database,search:database) — поиск по каталогу релизов. Для простых запросов **отдельный API-ключ не обязателен**, но нужен осмысленный **User-Agent** (у нас задаётся в `URLSessionNetworkClient`).
 
 **Endpoint:** `GET https://api.discogs.com/database/search`  
-Параметры в `RemoteCatalogService`: `q` (поисковая строка, по умолчанию `rock`), `type=release`, `per_page=30`.  
+Параметры в `RemoteCatalogService`: `q` (поисковая строка, по умолчанию `rock`), `type=release`, `per_page=100` (удобно для проверки скролла 100+).  
 Ответ — JSON с полем **`results`**: массив найденных релизов (плюс блок `pagination`, для Codable декодируем только `results`).
 
 **Пример в браузере (может потребоваться заголовок User-Agent):** см. [документацию Discogs](https://www.discogs.com/developers#page:database,search:database).
@@ -116,9 +117,30 @@ enum CatalogViewState: Equatable {
 
 **Офлайн / лимиты API:** при ошибке сети или декодирования подставляется `MusicApp/catalog_fallback.json` в формате Discogs (`results`).
 
-**Как проверить:** запустить приложение, войти (`user@example.com` / `password123`), открыть каталог. В консоли Xcode — лог из `CatalogViewController.render`.
+**Как проверить (лаба 4):** запустить приложение, войти (`user@example.com` / `password123`), открыть каталог.
 
 **Сетевой клиент:** протокол `NetworkClient`, реализация `URLSessionNetworkClient` (async/await, `User-Agent`, таймаут, `JSONDecoder`).
+
+### Лабораторная 5 — список UIKit + компоненты
+
+**Подход к списку:** `UITableView` + вынесенный **`CatalogListManager`** (`UITableViewDataSource` / `UITableViewDelegate`), отдельная ячейка **`PlaylistTableViewCell`** с `reuseIdentifier`, конфигурация только из **`PlaylistCellViewModel`**. Таблица не пересобирается «с нуля» при каждом изменении: обновляется модель в менеджере и вызывается `reloadData()` (разумный компромисс без Diffable).
+
+**Дополнительно из блока:**
+- **D2** — **поиск:** `UISearchBar`, фильтрация по уже загруженным `PlaylistCellViewModel` в интеракторе (`PlaylistCellViewModel.filtered`, без повторного API).
+- **D1** — **pull-to-refresh:** `UIRefreshControl`, повторная загрузка каталога с `isRefresh: true` (индикатор на таблице, не полноэкранный `.loading`).
+- **D3** — **картинки:** `ImageLoading` + `ImageCacheService` (`NSCache`, `URLSession`), отмена и сброс в `prepareForReuse` ячейки, проверка `expectedImageURL` после асинхронной загрузки.
+
+**Как открыть экран списка:** после успешного входа — push `CatalogViewController` (как и раньше).
+
+**Состояния на экране:**
+- **loading** — оверлей со спиннером при первой загрузке;
+- **content** — таблица + поиск + pull-to-refresh;
+- **empty** — текст из `empty(message:)` («Нет данных» с сервера или «Ничего не найдено» при фильтре поиска);
+- **error** — сообщение и кнопка «Повторить» (`retryLoadCatalog`).
+
+**Как увидеть error:** выключить сеть и зайти в каталог (или дождаться ошибки API); при наличии fallback из ЛР4 список может всё равно заполниться — тогда посмотреть сообщение об ошибке можно, временно отключив fallback в `RemoteCatalogService`.
+
+**По tap на строку:** `CatalogRouter` открывает **`PlaylistDetailViewController`**
 
 ---
 

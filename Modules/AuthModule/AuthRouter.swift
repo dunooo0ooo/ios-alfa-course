@@ -7,6 +7,7 @@ class AuthRouter: AuthRouterInput {
         let catalogVC = CatalogViewController()
         catalogVC.title = "Подборка плейлистов"
         catalogVC.catalogUserId = userId
+        catalogVC.imageLoader = ImageCacheService()
 
         let presenter = CatalogPresenter()
         let interactor = CatalogInteractor()
