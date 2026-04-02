@@ -9,7 +9,7 @@ protocol CatalogInteractorInput {
 
 protocol CatalogInteractorOutput: AnyObject {
     func catalogDidStartLoading(isRefresh: Bool)
-    func catalogDidLoad(_ items: [PlaylistCellViewModel])
+    func catalogDidLoad(_ items: [CatalogListItem])
     func catalogServerReturnedNoData()
     func catalogSearchFilterReturnedNoMatches()
     func catalogLoadFailed(with error: Error)

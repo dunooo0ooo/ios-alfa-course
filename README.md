@@ -126,9 +126,8 @@ enum CatalogViewState: Equatable {
 **Подход к списку:** `UITableView` + вынесенный **`CatalogListManager`** (`UITableViewDataSource` / `UITableViewDelegate`), отдельная ячейка **`PlaylistTableViewCell`** с `reuseIdentifier`, конфигурация только из **`PlaylistCellViewModel`**. Таблица не пересобирается «с нуля» при каждом изменении: обновляется модель в менеджере и вызывается `reloadData()` (разумный компромисс без Diffable).
 
 **Дополнительно из блока:**
-- **D2** — **поиск:** `UISearchBar`, фильтрация по уже загруженным `PlaylistCellViewModel` в интеракторе (`PlaylistCellViewModel.filtered`, без повторного API).
-- **D1** — **pull-to-refresh:** `UIRefreshControl`, повторная загрузка каталога с `isRefresh: true` (индикатор на таблице, не полноэкранный `.loading`).
-- **D3** — **картинки:** `ImageLoading` + `ImageCacheService` (`NSCache`, `URLSession`), отмена и сброс в `prepareForReuse` ячейки, проверка `expectedImageURL` после асинхронной загрузки.
+- **D2** — **поиск:** `UISearchBar`, фильтрация по уже загруженным `PlaylistCellViewModel`
+- **D1** — **pull-to-refresh:** `UIRefreshControl`, повторная загрузка каталога с `isRefresh: true`
 
 **Как открыть экран списка:** после успешного входа — push `CatalogViewController` (как и раньше).
 

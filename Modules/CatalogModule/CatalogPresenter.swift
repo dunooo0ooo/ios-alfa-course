@@ -10,9 +10,9 @@ class CatalogPresenter: CatalogInteractorOutput {
         }
     }
 
-    func catalogDidLoad(_ items: [PlaylistCellViewModel]) {
+    func catalogDidLoad(_ items: [CatalogListItem]) {
         view?.setRefreshing(false)
-        view?.render(.content(items))
+        view?.render(.content(makeCellViewModels(from: items)))
     }
 
     func catalogServerReturnedNoData() {
@@ -42,5 +42,17 @@ class CatalogPresenter: CatalogInteractorOutput {
 
     func openAuthModule() {
         router?.openAuthModule()
+    }
+
+    private func makeCellViewModels(from items: [CatalogListItem]) -> [PlaylistCellViewModel] {
+        items.map { item in
+            PlaylistCellViewModel(
+                id: item.id,
+                title: item.title,
+                subtitle: item.subtitle,
+                rightText: item.detailLine,
+                imageURL: item.artworkURL
+            )
+        }
     }
 }
