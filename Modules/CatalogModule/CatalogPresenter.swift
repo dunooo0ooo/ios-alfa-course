@@ -1,19 +1,30 @@
-
-class CatalogPresenter: CatalogPresenterInput {
+class CatalogPresenter: CatalogInteractorOutput {
     weak var view: CatalogView?
     var router: CatalogRouterInput?
-    var interactor: CatalogInteractorInput?
 
-    func didLoad(userId: String) {
+    func catalogDidStartLoading() {
         view?.render(.loading)
-        interactor?.loadCatalog(for: userId)
     }
 
-    func didSelectPlaylist(_ playlistId: String) {
+    func catalogDidLoad(_ items: [PlaylistCellViewModel]) {
+        if items.isEmpty {
+            view?.render(.empty)
+        } else {
+            view?.render(.content(items))
+        }
+    }
+
+    func catalogLoadFailed(with error: Error) {
+        let mapped = (error as? NetworkError) ?? NetworkError.map(error)
+        if mapped == .cancelled { return }
+        view?.render(.error(message: mapped.userMessage))
+    }
+
+    func openPlaylistDetail(with playlistId: String) {
         router?.openPlaylistDetail(with: playlistId)
     }
 
-    func didTapLogout() {
+    func openAuthModule() {
         router?.openAuthModule()
     }
 }

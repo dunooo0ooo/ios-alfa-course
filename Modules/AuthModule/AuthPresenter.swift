@@ -1,19 +1,16 @@
 import Foundation
 
-class AuthPresenter: AuthPresenterInput, AuthInteractorOutput {
+class AuthPresenter: AuthInteractorOutput {
     weak var view: AuthView?
     var router: AuthRouterInput?
-    var interactor: AuthInteractorInput?
 
-    func didLoad() {
+    func presentInitialState() {
         view?.render(.initial)
     }
 
-    func didTapLogin(email: String, password: String) {
+    func presentLoadingState() {
         view?.render(.loading)
-        interactor?.login(email: email, password: password)
     }
-
     
     func loginDidSucceed(userId: String) {
         view?.render(.content(email: ""))

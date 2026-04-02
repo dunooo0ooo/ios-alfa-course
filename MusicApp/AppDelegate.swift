@@ -13,10 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let interactor = AuthInteractor()
         let router = AuthRouter()
         
-        authVC.presenter = presenter
+        authVC.interactor = interactor
         presenter.view = authVC
         presenter.router = router
-        presenter.interactor = interactor
         interactor.presenter = presenter
         router.viewController = authVC
         

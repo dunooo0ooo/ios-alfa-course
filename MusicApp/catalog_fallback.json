@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "id": 900001,
+      "type": "release",
+      "title": "Локальный fallback — демо релиз",
+      "year": "2024",
+      "country": "RU",
+      "thumb": ""
+    },
+    {
+      "id": 900002,
+      "type": "release",
+      "title": "Второй офлайн-релиз (без сети)",
+      "year": "2023",
+      "country": "US",
+      "thumb": ""
+    },
+    {
+      "id": 900003,
+      "type": "release",
+      "title": "Третий офлайн-релиз",
+      "year": "2022",
+      "country": "GB",
+      "thumb": ""
+    }
+  ]
+}

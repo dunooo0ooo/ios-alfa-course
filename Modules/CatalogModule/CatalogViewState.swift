@@ -1,7 +1,8 @@
 
 enum CatalogViewState: Equatable {
+    case idle
     case loading
-    case content(sections: [CatalogSection])
+    case content([PlaylistCellViewModel])
     case empty
     case error(message: String)
 }

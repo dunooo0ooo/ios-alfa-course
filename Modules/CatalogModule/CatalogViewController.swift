@@ -2,52 +2,59 @@
 import UIKit
 
 class CatalogViewController: UIViewController, CatalogView {
-    var presenter: CatalogPresenterInput?
+    var interactor: CatalogInteractorInput?
+    var catalogUserId: String?
+    private lazy var placeholderLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Они скоро появятся..."
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     override func viewDidLoad() {
-            super.viewDidLoad()
-            view.backgroundColor = .systemBackground
-            
-            let label = UILabel()
-            label.text = "Они скоро появятся..."
-            label.textAlignment = .center
-            label.numberOfLines = 0
-            label.font = UIFont.systemFont(ofSize: 18)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(label)
-            
-            NSLayoutConstraint.activate([
-                label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-                label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-            ])
-        }
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
 
-    // Пример: выбор плейлиста
-    func didSelectPlaylist(_ playlistId: String) {
-        presenter?.didSelectPlaylist(playlistId)
+        view.addSubview(placeholderLabel)
+
+        NSLayoutConstraint.activate([
+            placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            placeholderLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            placeholderLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+        ])
+
+        if let userId = catalogUserId {
+            interactor?.loadCatalog(for: userId)
+        }
     }
 
-    // Пример: выход
+    func didSelectPlaylist(_ playlistId: String) {
+        interactor?.didSelectPlaylist(playlistId)
+    }
+
     func didTapLogout() {
-        presenter?.didTapLogout()
+        interactor?.didTapLogout()
     }
 
     func render(_ state: CatalogViewState) {
         switch state {
+        case .idle:
+            break
         case .loading:
-            print("Loading...")
-            // Показать индикатор загрузки
-        case .content(_):
-            // Обновить таблицу с секциями
-            print("Loading...")
+            print("Catalog: loading…")
+        case .content(let items):
+            print("Catalog: \(items.count) элементов")
+            for item in items.prefix(5) {
+                print("  • \(item.title) — \(item.subtitle ?? "")")
+            }
         case .empty:
-            // Показать "ничего нет"
-            print("Loading...")
-        case .error(_):
-            // Показать alert с message
-            print("Loading...")
+            print("Catalog: пусто")
+        case .error(let message):
+            print("Catalog: error — \(message)")
         }
     }
 }

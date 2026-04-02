@@ -1,4 +1,4 @@
 
 protocol CatalogService {
-    func fetchCatalog(for userId: String) async throws -> [CatalogSection]
+    func fetchCatalog(for userId: String) async throws -> [CatalogListItem]
 }
