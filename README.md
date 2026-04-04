@@ -126,7 +126,7 @@ enum CatalogViewState: Equatable {
 **Подход к списку:** `UITableView` + вынесенный **`CatalogListManager`** (`UITableViewDataSource` / `UITableViewDelegate`), отдельная ячейка **`PlaylistTableViewCell`** с `reuseIdentifier`, конфигурация только из **`PlaylistCellViewModel`**. Таблица не пересобирается «с нуля» при каждом изменении: обновляется модель в менеджере и вызывается `reloadData()` (разумный компромисс без Diffable).
 
 **Дополнительно из блока:**
-- **D2** — **поиск:** `UISearchBar`, фильтрация по уже загруженным `PlaylistCellViewModel`
+- **D2** — **поиск:** `UISearchBar`, фильтрация по уже загруженным `CatalogListItem` без повторного запроса
 - **D1** — **pull-to-refresh:** `UIRefreshControl`, повторная загрузка каталога с `isRefresh: true`
 
 **Как открыть экран списка:** после успешного входа — push `CatalogViewController` (как и раньше).
@@ -141,6 +141,30 @@ enum CatalogViewState: Equatable {
 
 **По tap на строку:** `CatalogRouter` открывает **`PlaylistDetailViewController`**
 
+### Лабораторная 6 — дизайн-система
+
+**Где лежит:** `MusicApp/DesignSystem`
+
+**Токены:**
+- `DS.Colors` — `background`, `surface`, `surfaceElevated`, `primary`, `textPrimary`, `textSecondary`, `error`, `separator`, `border`
+- `DS.Typography` — `heroTitle`, `screenTitle`, `body`, `bodyStrong`, `subheadline`, `caption`, `button`
+- `DS.Spacing` — `xSmall`, `small`, `medium`, `large`, `xLarge`, `xxLarge`, `screenInset`, `cornerRadius`, `fieldHeight`, `buttonHeight`
+- дополнительно: `DSTextStyle` + `UILabel.apply(_:)` для централизованного применения текстовых стилей
+
+**Компоненты:**
+- `DSButton` — primary / secondary кнопка, поддерживает loading-state
+- `DSTextField` — переиспользуемое поле ввода с title, placeholder и error-state
+- `DSStateView` — единый компонент состояний `loading / empty / error` с action-кнопкой
+
+**Где применено:**
+- `AuthViewController` — поля ввода переведены на `DSTextField`, кнопка входа на `DSButton`, экран использует общие токены цветов/типографики/отступов
+- `CatalogViewController` — поиск, фон, навигация и состояния экрана приведены к DS; `loading / empty / error` показываются через `DSStateView`
+- `PlaylistTableViewCell` — ячейка списка использует DS-токены для шрифтов, цветов и иконки
+
+**Дополнительные задания по лабе 6:**
+- `D3. TextStyle` — реализован `DSTextStyle` и расширение `UILabel.apply(_:)` в `MusicApp/DesignSystem/DS.swift`
+- `D4. Компоненты форм` — реализован `DSTextField` с поддержкой `title`, `placeholder` и `error-state`
+- `D5. DS для списка` — `PlaylistTableViewCell` сделана переиспользуемой ячейкой списка и оформлена через токены дизайн-системы
 ---
 
 ## PlaylistDetailModule  

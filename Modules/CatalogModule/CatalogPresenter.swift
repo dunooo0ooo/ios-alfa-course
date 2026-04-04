@@ -36,8 +36,8 @@ class CatalogPresenter: CatalogInteractorOutput {
         view?.setRefreshing(false)
     }
 
-    func openPlaylistDetail(with playlistId: String) {
-        router?.openPlaylistDetail(with: playlistId)
+    func openTrackDetail(id: String, title: String, subtitle: String?) {
+        router?.openTrackDetail(id: id, title: title, subtitle: subtitle)
     }
 
     func openAuthModule() {

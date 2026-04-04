@@ -3,7 +3,7 @@ protocol CatalogInteractorInput {
     func loadCatalog(for userId: String, isRefresh: Bool)
     func retryLoadCatalog()
     func searchQueryDidChange(_ query: String)
-    func didSelectPlaylist(_ playlistId: String)
+    func didSelectTrack(id: String, title: String, subtitle: String?)
     func didTapLogout()
 }
 
@@ -14,6 +14,6 @@ protocol CatalogInteractorOutput: AnyObject {
     func catalogSearchFilterReturnedNoMatches()
     func catalogLoadFailed(with error: Error)
     func catalogRefreshDidCancel()
-    func openPlaylistDetail(with playlistId: String)
+    func openTrackDetail(id: String, title: String, subtitle: String?)
     func openAuthModule()
 }

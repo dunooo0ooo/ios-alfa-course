@@ -4,8 +4,10 @@ import UIKit
 class PlaylistDetailInteractor: PlaylistDetailInteractorInput {
     var presenter: PlaylistDetailInteractorOutput?
     var service: PlaylistService?
+    private var currentCollectionId: String?
 
     func loadTracks(for playlistId: String) {
+        currentCollectionId = playlistId
         Task {
             do {
                 guard let service else {
@@ -17,7 +19,7 @@ class PlaylistDetailInteractor: PlaylistDetailInteractorInput {
                 let data = try await service.fetchPlaylistDetail(for: playlistId)
                 let tracks = data?.tracks ?? []
                 await MainActor.run {
-                    presenter?.tracksDidLoaded(tracks, currentIndex: nil)
+                    presenter?.tracksDidLoaded(tracks, currentIndex: tracks.isEmpty ? nil : 0)
                 }
             } catch {
                 await MainActor.run {
@@ -30,7 +32,7 @@ class PlaylistDetailInteractor: PlaylistDetailInteractorInput {
     func playTrack(at index: Int) {
         Task {
             do {
-                try await service?.playTrack(at: index, in: "playlistId")
+                try await service?.playTrack(at: index, in: currentCollectionId ?? "")
                 await MainActor.run {
                     presenter?.playbackStarted(at: index)
                 }

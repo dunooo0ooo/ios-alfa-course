@@ -3,11 +3,14 @@ import UIKit
 final class CatalogRouter: CatalogRouterInput {
     weak var viewController: UIViewController?
 
-    func openPlaylistDetail(with playlistId: String) {
+    func openTrackDetail(id: String, title: String, subtitle: String?) {
         guard let navigationController = viewController?.navigationController else { return }
 
         let detailVC = PlaylistDetailViewController()
-        detailVC.title = "Плейлист"
+        detailVC.playlistId = id
+        detailVC.trackTitle = title
+        detailVC.trackSubtitle = subtitle
+        detailVC.title = "Трек"
 
         let presenter = PlaylistDetailPresenter()
         let interactor = PlaylistDetailInteractor()
@@ -25,7 +28,7 @@ final class CatalogRouter: CatalogRouterInput {
         router.viewController = detailVC
 
         navigationController.pushViewController(detailVC, animated: true)
-        presenter.didLoad(playlistId: playlistId)
+        presenter.didLoad(playlistId: id)
     }
 
     func openAuthModule() {

@@ -10,6 +10,9 @@ final class PlaylistTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .default
         accessoryType = .disclosureIndicator
+        tintColor = DS.Colors.primary
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
 
     required init?(coder: NSCoder) { nil }
@@ -19,16 +22,22 @@ final class PlaylistTableViewCell: UITableViewCell {
         imageLoader.cancelLoad(for: self)
 
         var content = defaultContentConfiguration()
-        content.image = UIImage(systemName: "music.note.list")
-        content.imageProperties.tintColor = .secondaryLabel
+        content.image = DS.Icons.playlist
+        content.imageProperties.tintColor = DS.Colors.primary
         content.imageProperties.maximumSize = CGSize(width: 56, height: 56)
         content.text = viewModel.title
         content.secondaryText = viewModel.subtitle
-        content.textProperties.font = UIFont.preferredFont(forTextStyle: .headline)
-        content.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        content.secondaryTextProperties.color = .secondaryLabel
-        content.textToSecondaryTextVerticalPadding = 4
-        content.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12)
+        content.textProperties.font = DS.Typography.bodyStrong()
+        content.textProperties.color = DS.Colors.textPrimary
+        content.secondaryTextProperties.font = DS.Typography.subheadline()
+        content.secondaryTextProperties.color = DS.Colors.textSecondary
+        content.textToSecondaryTextVerticalPadding = DS.Spacing.xSmall
+        content.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: DS.Spacing.medium,
+            leading: DS.Spacing.large,
+            bottom: DS.Spacing.medium,
+            trailing: DS.Spacing.medium
+        )
         contentConfiguration = content
 
         if let rightText = viewModel.rightText, !rightText.isEmpty {
@@ -49,8 +58,8 @@ final class PlaylistTableViewCell: UITableViewCell {
 
     private func makeRightAccessoryLabel() -> UILabel {
         let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.textColor = .secondaryLabel
+        label.font = DS.Typography.subheadline()
+        label.textColor = DS.Colors.textSecondary
         label.textAlignment = .right
         rightAccessoryLabel = label
         return label
