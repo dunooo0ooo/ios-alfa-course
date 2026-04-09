@@ -54,6 +54,10 @@
 		8DABAA0E2F7200070053F573 /* PlaylistCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA0D2F7200070053F573 /* PlaylistCellViewModel.swift */; };
 		8DABAA102F7200080053F573 /* StubPlaylistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA0F2F7200080053F573 /* StubPlaylistService.swift */; };
 		8DABAA122F7200090053F573 /* CatalogRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABAA112F7200090053F573 /* CatalogRouter.swift */; };
+		8E30AA112F8200110053F573 /* ImageLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA012F8200010053F573 /* ImageLoading.swift */; };
+		8E30AA122F8200120053F573 /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA022F8200020053F573 /* ImageCacheService.swift */; };
+		8E30AA132F8200130053F573 /* CatalogListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA032F8200030053F573 /* CatalogListManager.swift */; };
+		8E30AA142F8200140053F573 /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA042F8200040053F573 /* PlaylistTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -105,6 +109,10 @@
 		8DABAA0D2F7200070053F573 /* PlaylistCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCellViewModel.swift; sourceTree = "<group>"; };
 		8DABAA0F2F7200080053F573 /* StubPlaylistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubPlaylistService.swift; sourceTree = "<group>"; };
 		8DABAA112F7200090053F573 /* CatalogRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogRouter.swift; sourceTree = "<group>"; };
+		8E30AA012F8200010053F573 /* ImageLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoading.swift; sourceTree = "<group>"; };
+		8E30AA022F8200020053F573 /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
+		8E30AA032F8200030053F573 /* CatalogListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogListManager.swift; sourceTree = "<group>"; };
+		8E30AA042F8200040053F573 /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -143,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				8DABAA112F7200090053F573 /* CatalogRouter.swift */,
+				8E30AA032F8200030053F573 /* CatalogListManager.swift */,
+				8E30AA042F8200040053F573 /* PlaylistTableViewCell.swift */,
 				8D11BE0B2F620C120053F573 /* CatalogInteractor.swift */,
 				8D11BE092F620C030053F573 /* CatalogPresenter.swift */,
 				8D11BE072F620BCE0053F573 /* CatalogViewController.swift */,
@@ -242,11 +252,21 @@
 			isa = PBXGroup;
 			children = (
 				8DABAA132F72000A0053F573 /* Network */,
+				8E30AA212F8200210053F573 /* Image */,
 				8D9D6A692F659020009EA59C /* Playlist */,
 				8D9D6A672F659009009EA59C /* Catalog */,
 				8D9D6A652F658FED009EA59C /* Auth */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		8E30AA212F8200210053F573 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				8E30AA012F8200010053F573 /* ImageLoading.swift */,
+				8E30AA022F8200020053F573 /* ImageCacheService.swift */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 		8D6E4F162F5F152A0070EDE3 /* AuthModule */ = {
@@ -438,6 +458,10 @@
 				8DABAA0E2F7200070053F573 /* PlaylistCellViewModel.swift in Sources */,
 				8DABAA102F7200080053F573 /* StubPlaylistService.swift in Sources */,
 				8DABAA122F7200090053F573 /* CatalogRouter.swift in Sources */,
+				8E30AA112F8200110053F573 /* ImageLoading.swift in Sources */,
+				8E30AA122F8200120053F573 /* ImageCacheService.swift in Sources */,
+				8E30AA132F8200130053F573 /* CatalogListManager.swift in Sources */,
+				8E30AA142F8200140053F573 /* PlaylistTableViewCell.swift in Sources */,
 				8D6E4F272F5F18660070EDE3 /* AuthViewController.swift in Sources */,
 				8D11BE182F620FC20053F573 /* PlaylistDetailViewProtocol.swift in Sources */,
 				8D6E4F282F5F18720070EDE3 /* AuthViewState.swift in Sources */,
