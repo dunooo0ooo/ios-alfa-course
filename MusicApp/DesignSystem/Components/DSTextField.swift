@@ -1,35 +1,58 @@
 import UIKit
 
 final class DSTextField: UIView {
+    struct Configuration: Equatable {
+        let title: String?
+        let placeholder: String
+        let text: String?
+        let errorText: String?
+
+        init(title: String?, placeholder: String, text: String? = nil, errorText: String? = nil) {
+            self.title = title
+            self.placeholder = placeholder
+            self.text = text
+            self.errorText = errorText
+        }
+    }
+
     let textField = UITextField()
 
     private let titleLabel = UILabel()
     private let containerView = UIView()
     private let errorLabel = UILabel()
+    private var currentConfiguration = Configuration(title: nil, placeholder: "")
 
     var text: String? {
         get { textField.text }
         set { textField.text = newValue }
     }
 
-    init(title: String?, placeholder: String) {
+    init(configuration: Configuration) {
+        self.currentConfiguration = configuration
         super.init(frame: .zero)
         setupUI()
-        configure(title: title, placeholder: placeholder)
+        configure(configuration)
     }
 
     required init?(coder: NSCoder) { nil }
 
-    func configure(title: String?, placeholder: String) {
-        titleLabel.text = title
-        titleLabel.isHidden = title == nil
-        textField.placeholder = placeholder
+    func configure(_ configuration: Configuration) {
+        currentConfiguration = configuration
+        titleLabel.text = configuration.title
+        titleLabel.isHidden = configuration.title == nil
+        textField.placeholder = configuration.placeholder
+        textField.text = configuration.text
+        applyError(configuration.errorText)
     }
 
     func setError(_ message: String?) {
-        errorLabel.text = message
-        errorLabel.isHidden = message == nil
-        containerView.layer.borderColor = (message == nil ? DS.Colors.border : DS.Colors.error).cgColor
+        currentConfiguration = Configuration(
+            title: currentConfiguration.title,
+            placeholder: currentConfiguration.placeholder,
+            text: textField.text,
+            errorText: message
+        )
+        applyError(message)
     }
 
     func becomeActive() {
@@ -89,5 +112,11 @@ final class DSTextField: UIView {
             errorLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             errorLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+    }
+
+    private func applyError(_ message: String?) {
+        errorLabel.text = message
+        errorLabel.isHidden = message == nil
+        containerView.layer.borderColor = (message == nil ? DS.Colors.border : DS.Colors.error).cgColor
     }
 }

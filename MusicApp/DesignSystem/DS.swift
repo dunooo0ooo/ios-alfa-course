@@ -22,11 +22,14 @@ enum DS {
         static let large: CGFloat = 16
         static let xLarge: CGFloat = 24
         static let xxLarge: CGFloat = 32
+        static let xxxLarge: CGFloat = 40
         static let screenInset: CGFloat = 20
         static let cornerRadius: CGFloat = 14
+        static let cornerRadiusLarge: CGFloat = 24
         static let fieldHeight: CGFloat = 52
         static let buttonHeight: CGFloat = 52
         static let cardPadding: CGFloat = 16
+        static let heroArtworkSize: CGFloat = 180
     }
 
     enum Typography {

@@ -35,7 +35,7 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     }()
 
     private lazy var emailField: DSTextField = {
-        let field = DSTextField(title: "Email", placeholder: "user@example.com")
+        let field = DSTextField(configuration: .init(title: "Email", placeholder: "user@example.com"))
         field.textField.keyboardType = .emailAddress
         field.textField.textContentType = .username
         field.textField.autocapitalizationType = .none
@@ -47,7 +47,7 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     }()
 
     private lazy var passwordField: DSTextField = {
-        let field = DSTextField(title: "Пароль", placeholder: "Введите пароль")
+        let field = DSTextField(configuration: .init(title: "Пароль", placeholder: "Введите пароль"))
         field.textField.isSecureTextEntry = true
         field.textField.textContentType = .password
         field.textField.returnKeyType = .go
@@ -57,8 +57,7 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     }()
 
     private lazy var loginButton: DSButton = {
-        let button = DSButton(style: .primary)
-        button.setTitle("Войти", for: .normal)
+        let button = DSButton(configuration: .init(title: "Войти", style: .primary))
         button.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         button.accessibilityIdentifier = "loginButton"
         return button
@@ -174,34 +173,29 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     func render(_ state: AuthViewState) {
         switch state {
         case .initial:
-            emailField.text = ""
-            passwordField.text = ""
+            emailField.configure(.init(title: "Email", placeholder: "user@example.com", text: "", errorText: nil))
+            passwordField.configure(.init(title: "Пароль", placeholder: "Введите пароль", text: "", errorText: nil))
             errorLabel.alpha = 0
             errorLabel.text = nil
-            emailField.setError(nil)
-            passwordField.setError(nil)
-            loginButton.isEnabled = true
-            loginButton.isLoading = false
+            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: true, isLoading: false))
 
         case .loading:
             errorLabel.alpha = 0
             emailField.setError(nil)
             passwordField.setError(nil)
-            loginButton.isEnabled = false
-            loginButton.isLoading = true
+            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: false, isLoading: true))
 
         case .content(let email):
-            emailField.text = email
+            emailField.configure(.init(title: "Email", placeholder: "user@example.com", text: email, errorText: nil))
+            passwordField.configure(.init(title: "Пароль", placeholder: "Введите пароль", text: passwordField.text, errorText: nil))
             errorLabel.alpha = 0
             errorLabel.text = nil
-            emailField.setError(nil)
-            passwordField.setError(nil)
-            loginButton.isEnabled = true
-            loginButton.isLoading = false
+            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: true, isLoading: false))
 
         case .error(let message):
-            loginButton.isEnabled = true
-            loginButton.isLoading = false
+            emailField.setError(nil)
+            passwordField.setError(nil)
+            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: true, isLoading: false))
             errorLabel.text = message
             UIView.animate(withDuration: 0.25) {
                 self.errorLabel.alpha = 1

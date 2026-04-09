@@ -15,7 +15,7 @@ final class PlaylistDetailViewController: UIViewController, PlaylistDetailView {
         view.contentMode = .scaleAspectFit
         view.tintColor = DS.Colors.primary
         view.backgroundColor = DS.Colors.surface
-        view.layer.cornerRadius = 24
+        view.layer.cornerRadius = DS.Spacing.cornerRadiusLarge
         view.layer.cornerCurve = .continuous
         view.clipsToBounds = true
         view.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 64, weight: .medium)
@@ -64,8 +64,8 @@ final class PlaylistDetailViewController: UIViewController, PlaylistDetailView {
         NSLayoutConstraint.activate([
             artworkView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             artworkView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -90),
-            artworkView.widthAnchor.constraint(equalToConstant: 180),
-            artworkView.heightAnchor.constraint(equalToConstant: 180),
+            artworkView.widthAnchor.constraint(equalToConstant: DS.Spacing.heroArtworkSize),
+            artworkView.heightAnchor.constraint(equalToConstant: DS.Spacing.heroArtworkSize),
 
             titleLabel.topAnchor.constraint(equalTo: artworkView.bottomAnchor, constant: DS.Spacing.xLarge),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DS.Spacing.xLarge),

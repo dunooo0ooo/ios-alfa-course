@@ -13,7 +13,7 @@ final class DSStateView: UIView {
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
-    private let actionButton = DSButton(style: .secondary)
+    private let actionButton = DSButton()
     private let stackView = UIStackView()
 
     override init(frame: CGRect) {
@@ -31,6 +31,7 @@ final class DSStateView: UIView {
             titleLabel.text = title
             subtitleLabel.text = subtitle
             subtitleLabel.isHidden = subtitle == nil
+            actionButton.configure(.init(title: "Повторить", style: .secondary))
             actionButton.isHidden = true
         case .empty(let title, let subtitle):
             iconView.isHidden = false
@@ -39,6 +40,7 @@ final class DSStateView: UIView {
             titleLabel.text = title
             subtitleLabel.text = subtitle
             subtitleLabel.isHidden = subtitle == nil
+            actionButton.configure(.init(title: "Повторить", style: .secondary))
             actionButton.isHidden = true
         case .error(let title, let subtitle, let actionTitle):
             iconView.isHidden = false
@@ -47,7 +49,7 @@ final class DSStateView: UIView {
             titleLabel.text = title
             subtitleLabel.text = subtitle
             subtitleLabel.isHidden = subtitle == nil
-            actionButton.setTitle(actionTitle, for: .normal)
+            actionButton.configure(.init(title: actionTitle, style: .secondary))
             actionButton.isHidden = false
         }
     }
@@ -80,7 +82,7 @@ final class DSStateView: UIView {
         stackView.spacing = DS.Spacing.medium
         stackView.alignment = .center
 
-        actionButton.setTitle("Повторить", for: .normal)
+        actionButton.configure(.init(title: "Повторить", style: .secondary))
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
         actionButton.isHidden = true
 
