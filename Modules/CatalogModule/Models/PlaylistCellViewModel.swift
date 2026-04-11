@@ -6,4 +6,5 @@ struct PlaylistCellViewModel: Equatable, Sendable {
     let subtitle: String?
     let rightText: String?
     let imageURL: URL?
+    let cellConfiguration: DSListItemCellViewModel
 }

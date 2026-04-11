@@ -1,5 +1,5 @@
 
 protocol CatalogRouterInput {
-    func openPlaylistDetail(with playlistId: String)
+    func openTrackDetail(id: String, title: String, subtitle: String?)
     func openAuthModule()
 }

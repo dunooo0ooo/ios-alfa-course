@@ -1,0 +1,80 @@
+import UIKit
+
+struct DSListItemCellViewModel: Equatable, Sendable {
+    enum Icon: Equatable, Sendable {
+        case playlist
+    }
+
+    let title: String
+    let subtitle: String?
+    let trailingText: String?
+    let icon: Icon
+}
+
+class DSListItemCell: UITableViewCell {
+    static let reuseIdentifier = "DSListItemCell"
+
+    private var trailingLabel: UILabel?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .default
+        accessoryType = .disclosureIndicator
+        tintColor = DS.Colors.primary
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    func configure(with viewModel: DSListItemCellViewModel) {
+        var content = defaultContentConfiguration()
+        content.image = image(for: viewModel.icon)
+        content.imageProperties.tintColor = DS.Colors.primary
+        content.imageProperties.maximumSize = CGSize(width: 56, height: 56)
+        content.text = viewModel.title
+        content.secondaryText = viewModel.subtitle
+        content.textProperties.font = DS.Typography.bodyStrong()
+        content.textProperties.color = DS.Colors.textPrimary
+        content.secondaryTextProperties.font = DS.Typography.subheadline()
+        content.secondaryTextProperties.color = DS.Colors.textSecondary
+        content.textToSecondaryTextVerticalPadding = DS.Spacing.xSmall
+        content.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: DS.Spacing.medium,
+            leading: DS.Spacing.large,
+            bottom: DS.Spacing.medium,
+            trailing: DS.Spacing.medium
+        )
+        contentConfiguration = content
+
+        if let trailingText = viewModel.trailingText, !trailingText.isEmpty {
+            let label = trailingLabel ?? makeTrailingLabel()
+            label.text = trailingText
+            accessoryView = label
+        } else {
+            accessoryView = nil
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        contentConfiguration = nil
+        accessoryView = nil
+    }
+
+    private func image(for icon: DSListItemCellViewModel.Icon) -> UIImage? {
+        switch icon {
+        case .playlist:
+            return DS.Icons.playlist
+        }
+    }
+
+    private func makeTrailingLabel() -> UILabel {
+        let label = UILabel()
+        label.font = DS.Typography.subheadline()
+        label.textColor = DS.Colors.textSecondary
+        label.textAlignment = .right
+        trailingLabel = label
+        return label
+    }
+}

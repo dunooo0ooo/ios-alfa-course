@@ -1,7 +1,14 @@
 
+struct AuthScreenViewModel: Equatable {
+    let emailField: DSTextField.Configuration
+    let passwordField: DSTextField.Configuration
+    let loginButton: DSButton.Configuration
+    let errorMessage: String?
+}
+
 enum AuthViewState: Equatable {
-    case initial
-    case loading
-    case content(email: String)
-    case error(message: String)
+    case initial(AuthScreenViewModel)
+    case loading(AuthScreenViewModel)
+    case content(AuthScreenViewModel)
+    case error(AuthScreenViewModel)
 }

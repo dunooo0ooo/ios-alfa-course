@@ -86,8 +86,8 @@ class CatalogInteractor: CatalogInteractorInput {
         }
     }
 
-    func didSelectPlaylist(_ playlistId: String) {
-        presenter?.openPlaylistDetail(with: playlistId)
+    func didSelectTrack(id: String, title: String, subtitle: String?) {
+        presenter?.openTrackDetail(id: id, title: title, subtitle: subtitle)
     }
 
     func didTapLogout() {

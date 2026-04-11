@@ -36,8 +36,8 @@ class CatalogPresenter: CatalogInteractorOutput {
         view?.setRefreshing(false)
     }
 
-    func openPlaylistDetail(with playlistId: String) {
-        router?.openPlaylistDetail(with: playlistId)
+    func openTrackDetail(id: String, title: String, subtitle: String?) {
+        router?.openTrackDetail(id: id, title: title, subtitle: subtitle)
     }
 
     func openAuthModule() {
@@ -51,7 +51,13 @@ class CatalogPresenter: CatalogInteractorOutput {
                 title: item.title,
                 subtitle: item.subtitle,
                 rightText: item.detailLine,
-                imageURL: item.artworkURL
+                imageURL: item.artworkURL,
+                cellConfiguration: .init(
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    trailingText: item.detailLine,
+                    icon: .playlist
+                )
             )
         }
     }

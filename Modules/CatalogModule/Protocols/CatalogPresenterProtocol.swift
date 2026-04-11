@@ -1,4 +1,4 @@
 protocol CatalogPresenterOutput: AnyObject {
-    func didSelectPlaylist(_ playlistId: String)
+    func didSelectTrack(id: String, title: String, subtitle: String?)
     func didLogout()
 }

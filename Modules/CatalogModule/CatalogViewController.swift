@@ -1,4 +1,3 @@
-
 import UIKit
 
 final class CatalogViewController: UIViewController, CatalogView, UISearchBarDelegate, CatalogListManagerDelegate {
@@ -10,79 +9,71 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         let bar = UISearchBar()
         bar.placeholder = "Поиск по списку"
         bar.delegate = self
+        bar.searchBarStyle = .minimal
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.accessibilityIdentifier = "catalogSearchBar"
+        if #available(iOS 13.0, *) {
+            let textField = bar.searchTextField
+            textField.backgroundColor = DS.Colors.surfaceElevated
+            textField.textColor = DS.Colors.textPrimary
+            textField.layer.cornerRadius = DS.Spacing.cornerRadius
+            textField.clipsToBounds = true
+        }
         return bar
     }()
 
     private lazy var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .plain)
+        let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.tableFooterView = UIView()
+        tv.backgroundColor = .clear
+        tv.separatorColor = DS.Colors.separator
         tv.accessibilityIdentifier = "catalogTableView"
         return tv
     }()
 
     private lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
+        control.tintColor = DS.Colors.primary
         control.addTarget(self, action: #selector(refreshPulled), for: .valueChanged)
         return control
     }()
 
     private lazy var listContainer: UIView = {
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
-    private lazy var stateOverlay: UIView = {
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .systemBackground
-        v.isHidden = true
-        return v
-    }()
-
-    private lazy var loadingIndicator: UIActivityIndicatorView = {
-        let v = UIActivityIndicatorView(style: .large)
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.hidesWhenStopped = true
-        return v
-    }()
-
-    private lazy var messageLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.font = UIFont.preferredFont(forTextStyle: .body)
-        return label
-    }()
-
-    private lazy var retryButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Повторить", for: .normal)
-        button.addTarget(self, action: #selector(retryTapped), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var messageStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [messageLabel, retryButton])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.isHidden = true
-        return stack
+    private lazy var stateView: DSStateView = {
+        let view = DSStateView()
+        view.isHidden = true
+        view.actionHandler = { [weak self] in
+            self?.retryTapped()
+        }
+        return view
     }()
 
     private var listManager: CatalogListManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        setupUI()
 
+        listManager = CatalogListManager(tableView: tableView, imageLoader: imageLoader)
+        listManager.delegate = self
+
+        if let userId = catalogUserId {
+            interactor?.loadCatalog(for: userId, isRefresh: false)
+        }
+    }
+
+    private func setupUI() {
+        view.backgroundColor = DS.Colors.background
+        title = "Подборка плейлистов"
+
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.tintColor = DS.Colors.primary
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Выйти",
             style: .plain,
@@ -95,16 +86,14 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         view.addSubview(searchBar)
         view.addSubview(listContainer)
         listContainer.addSubview(tableView)
-        listContainer.addSubview(stateOverlay)
-        stateOverlay.addSubview(loadingIndicator)
-        stateOverlay.addSubview(messageStack)
+        listContainer.addSubview(stateView)
 
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: DS.Spacing.small),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DS.Spacing.small),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DS.Spacing.small),
 
-            listContainer.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            listContainer.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: DS.Spacing.small),
             listContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             listContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             listContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -114,26 +103,11 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
             tableView.trailingAnchor.constraint(equalTo: listContainer.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: listContainer.bottomAnchor),
 
-            stateOverlay.topAnchor.constraint(equalTo: listContainer.topAnchor),
-            stateOverlay.leadingAnchor.constraint(equalTo: listContainer.leadingAnchor),
-            stateOverlay.trailingAnchor.constraint(equalTo: listContainer.trailingAnchor),
-            stateOverlay.bottomAnchor.constraint(equalTo: listContainer.bottomAnchor),
-
-            loadingIndicator.centerXAnchor.constraint(equalTo: stateOverlay.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: stateOverlay.centerYAnchor),
-
-            messageStack.centerXAnchor.constraint(equalTo: stateOverlay.centerXAnchor),
-            messageStack.centerYAnchor.constraint(equalTo: stateOverlay.centerYAnchor),
-            messageStack.leadingAnchor.constraint(greaterThanOrEqualTo: stateOverlay.leadingAnchor, constant: 24),
-            messageStack.trailingAnchor.constraint(lessThanOrEqualTo: stateOverlay.trailingAnchor, constant: -24),
+            stateView.topAnchor.constraint(equalTo: listContainer.topAnchor),
+            stateView.leadingAnchor.constraint(equalTo: listContainer.leadingAnchor),
+            stateView.trailingAnchor.constraint(equalTo: listContainer.trailingAnchor),
+            stateView.bottomAnchor.constraint(equalTo: listContainer.bottomAnchor),
         ])
-
-        listManager = CatalogListManager(tableView: tableView, imageLoader: imageLoader)
-        listManager.delegate = self
-
-        if let userId = catalogUserId {
-            interactor?.loadCatalog(for: userId, isRefresh: false)
-        }
     }
 
     @objc private func logoutTapped() {
@@ -152,8 +126,8 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         interactor?.loadCatalog(for: userId, isRefresh: true)
     }
 
-    func catalogListManagerDidSelectItem(id: String) {
-        interactor?.didSelectPlaylist(id)
+    func catalogListManagerDidSelectItem(_ item: PlaylistCellViewModel) {
+        interactor?.didSelectTrack(id: item.id, title: item.title, subtitle: item.subtitle)
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -162,14 +136,6 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-    }
-
-    func didSelectPlaylist(_ playlistId: String) {
-        interactor?.didSelectPlaylist(playlistId)
-    }
-
-    func didTapLogout() {
-        interactor?.didTapLogout()
     }
 
     func setRefreshing(_ active: Bool) {
@@ -185,29 +151,21 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         case .idle:
             break
         case .loading:
-            stateOverlay.isHidden = false
-            messageStack.isHidden = true
-            loadingIndicator.startAnimating()
+            stateView.isHidden = false
+            stateView.render(.loading(title: "Загружаем плейлисты", subtitle: "Подождите пару секунд"))
             tableView.isHidden = true
         case .content(let items):
-            stateOverlay.isHidden = true
-            loadingIndicator.stopAnimating()
+            stateView.isHidden = true
             tableView.isHidden = false
             listManager.setItems(items)
         case .empty(let message):
-            stateOverlay.isHidden = false
-            loadingIndicator.stopAnimating()
-            messageLabel.text = message
-            retryButton.isHidden = true
-            messageStack.isHidden = false
+            stateView.isHidden = false
+            stateView.render(.empty(title: "Список пуст", subtitle: message))
             tableView.isHidden = true
             listManager.setItems([])
         case .error(let message):
-            stateOverlay.isHidden = false
-            loadingIndicator.stopAnimating()
-            messageLabel.text = message
-            retryButton.isHidden = false
-            messageStack.isHidden = false
+            stateView.isHidden = false
+            stateView.render(.error(title: "Не удалось загрузить список", subtitle: message, actionTitle: "Повторить"))
             tableView.isHidden = true
             listManager.setItems([])
         }

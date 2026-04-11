@@ -1,135 +1,129 @@
 import UIKit
 
 final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate {
-    
     var interactor: AuthInteractorInput?
-    
+
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
-        view.contentMode = .scaleToFill
         view.alwaysBounceVertical = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
     private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    private lazy var emailTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Email"
-        textField.keyboardType = .emailAddress
-        textField.autocapitalizationType = .none
-        textField.delegate = self
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }()
-    private lazy var passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Пароль"
-        textField.isSecureTextEntry = true
-        textField.delegate = self
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }()
-    private lazy var loginButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Войти", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
-        return button
-    }()
-    private lazy var errorLabel: UILabel = {
+
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemRed
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.alpha = 0
+        label.apply(.heroTitle)
+        label.numberOfLines = 0
+        label.text = "Музыка без лишнего шума"
         return label
     }()
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.hidesWhenStopped = true
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
+
+    private lazy var subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.apply(.body)
+        label.numberOfLines = 0
+        label.text = "Войдите, чтобы открыть подборку плейлистов и перейти к списку релизов."
+        return label
     }()
-    
+
+    private lazy var emailField: DSTextField = {
+        let field = DSTextField(configuration: .init(title: "Email", placeholder: "user@example.com"))
+        field.textField.keyboardType = .emailAddress
+        field.textField.textContentType = .username
+        field.textField.autocapitalizationType = .none
+        field.textField.autocorrectionType = .no
+        field.textField.returnKeyType = .next
+        field.textField.delegate = self
+        field.textField.accessibilityIdentifier = "emailTextField"
+        return field
+    }()
+
+    private lazy var passwordField: DSTextField = {
+        let field = DSTextField(configuration: .init(title: "Пароль", placeholder: "Введите пароль"))
+        field.textField.isSecureTextEntry = true
+        field.textField.textContentType = .password
+        field.textField.returnKeyType = .go
+        field.textField.delegate = self
+        field.textField.accessibilityIdentifier = "passwordTextField"
+        return field
+    }()
+
+    private lazy var loginButton: DSButton = {
+        let button = DSButton(configuration: .init(title: "Войти", style: .primary))
+        button.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "loginButton"
+        return button
+    }()
+
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.apply(.error)
+        label.numberOfLines = 0
+        label.alpha = 0
+        label.accessibilityIdentifier = "errorLabel"
+        return label
+    }()
+
+    private lazy var formStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [emailField, passwordField, errorLabel, loginButton])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = DS.Spacing.large
+        return stack
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupKeyboardObservers()
         interactor?.didLoad()
     }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-    }
-    
+
     private func setupUI() {
-        view.backgroundColor = .systemBackground
-        
+        view.backgroundColor = DS.Colors.background
+
         view.addSubview(scrollView)
-        
         scrollView.addSubview(contentView)
-        
-        contentView.addSubview(emailTextField)
-        
-        contentView.addSubview(passwordTextField)
-        
-        contentView.addSubview(errorLabel)
-        
-        contentView.addSubview(activityIndicator)
-        
-        contentView.addSubview(loginButton)
-        
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
+        contentView.addSubview(formStack)
+
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+
             contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-            
-            emailTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
-            emailTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            emailTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20),
-            passwordTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            passwordTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
-            errorLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 8),
-            errorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            errorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
-            activityIndicator.centerYAnchor.constraint(equalTo: loginButton.centerYAnchor),
-            activityIndicator.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: DS.Spacing.xxLarge),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: DS.Spacing.screenInset),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -DS.Spacing.screenInset),
 
-            loginButton.topAnchor.constraint(equalTo: errorLabel.bottomAnchor, constant: 20),
-            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -40)
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: DS.Spacing.medium),
+            subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+
+            formStack.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: DS.Spacing.xxLarge),
+            formStack.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            formStack.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            formStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -DS.Spacing.xxLarge),
         ])
-        
-        emailTextField.accessibilityIdentifier = "emailTextField"
-        passwordTextField.accessibilityIdentifier = "passwordTextField"
-        loginButton.accessibilityIdentifier = "loginButton"
-        errorLabel.accessibilityIdentifier = "errorLabel"
-        activityIndicator.accessibilityIdentifier = "activityIndicator"
     }
-    
+
     private func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(
             self,
@@ -138,75 +132,62 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
             object: nil
         )
     }
-    
+
     @objc private func keyboardWillChangeFrame(_ note: Notification) {
         guard
             let userInfo = note.userInfo,
             let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
         else { return }
+
         let keyboardInView = view.convert(endFrame, from: nil)
         let intersection = view.bounds.intersection(keyboardInView)
         let inset = intersection.height
         scrollView.contentInset.bottom = inset
         scrollView.verticalScrollIndicatorInsets.bottom = inset
         scrollView.horizontalScrollIndicatorInsets.bottom = inset
+
         if let activeField = findActiveTextField(),
            activeField.frame.maxY > keyboardInView.minY {
-            scrollView.scrollRectToVisible(activeField.frame, animated: true)
+            scrollView.scrollRectToVisible(activeField.frame.insetBy(dx: 0, dy: -DS.Spacing.xLarge), animated: true)
         }
     }
-    
+
     private func findActiveTextField() -> UITextField? {
-        return [emailTextField, passwordTextField].first { $0.isFirstResponder }
+        [emailField.textField, passwordField.textField].first { $0.isFirstResponder }
     }
-    
+
     @objc private func loginTapped() {
-        interactor?.login(email: emailTextField.text ?? "", password: passwordTextField.text ?? "")
+        interactor?.login(email: emailField.text ?? "", password: passwordField.text ?? "")
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == emailTextField {
-            passwordTextField.becomeFirstResponder()
+        if textField == emailField.textField {
+            passwordField.becomeActive()
         } else {
             loginTapped()
-            textField.resignFirstResponder()
+            passwordField.resignActive()
         }
         return true
     }
-    
+
     func render(_ state: AuthViewState) {
+        let viewModel: AuthScreenViewModel
         switch state {
-        case .initial:
-            emailTextField.text = ""
-            passwordTextField.text = ""
-            errorLabel.alpha = 0
-            loginButton.isEnabled = true
-            loginButton.alpha = 1.0
-            activityIndicator.stopAnimating()
-            
-        case .loading:
-            loginButton.isEnabled = false
-            loginButton.alpha = 0.5
-            activityIndicator.startAnimating()
-            
-        case .content(let email):
-            emailTextField.text = email
-            errorLabel.alpha = 0
-            loginButton.isEnabled = true
-            loginButton.alpha = 1.0
-            activityIndicator.stopAnimating()
-            
-        case .error(let message):
-            errorLabel.text = message
-            UIView.animate(withDuration: 0.3) {
-                self.errorLabel.alpha = 1.0
-            }
-            loginButton.isEnabled = true
-            loginButton.alpha = 1.0
-            activityIndicator.stopAnimating()
+        case .initial(let model), .loading(let model), .content(let model), .error(let model):
+            viewModel = model
+        }
+
+        emailField.configure(viewModel.emailField)
+        passwordField.configure(viewModel.passwordField)
+        loginButton.configure(viewModel.loginButton)
+        errorLabel.text = viewModel.errorMessage
+
+        let targetAlpha: CGFloat = viewModel.errorMessage == nil ? 0 : 1
+        UIView.animate(withDuration: 0.25) {
+            self.errorLabel.alpha = targetAlpha
         }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

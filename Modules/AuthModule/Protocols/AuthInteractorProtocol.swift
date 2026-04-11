@@ -6,7 +6,7 @@ protocol AuthInteractorInput {
 
 protocol AuthInteractorOutput: AnyObject {
     func presentInitialState()
-    func presentLoadingState()
-    func loginDidSucceed(userId: String)
-    func loginDidFail(with error: Error)
+    func presentLoadingState(email: String, password: String)
+    func loginDidSucceed(userId: String, email: String)
+    func loginDidFail(with error: Error, email: String, password: String)
 }

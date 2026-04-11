@@ -4,6 +4,9 @@ class PlaylistDetailPresenter: PlaylistDetailPresenterInput {
     weak var view: PlaylistDetailView?
     var router: PlaylistDetailRouterInput?
     var interactor: PlaylistDetailInteractorInput?
+    private var tracks: [Track] = []
+    private var currentIndex: Int?
+    private var isPlaying = false
 
     func didLoad(playlistId: String) {
         view?.render(.loading)
@@ -28,7 +31,10 @@ extension PlaylistDetailPresenter: PlaylistDetailInteractorOutput {
         if tracks.isEmpty {
             view?.render(.empty)
         } else {
-            view?.render(.content(tracks: tracks, isPlaying: false, currentIndex: currentIndex))
+            self.tracks = tracks
+            self.currentIndex = currentIndex ?? 0
+            isPlaying = false
+            view?.render(.content(tracks: tracks, isPlaying: isPlaying, currentIndex: self.currentIndex))
         }
     }
 
@@ -37,11 +43,15 @@ extension PlaylistDetailPresenter: PlaylistDetailInteractorOutput {
     }
 
     func playbackStarted(at index: Int) {
-        // UI обновим
-        _ = index
+        guard tracks.indices.contains(index) else { return }
+        currentIndex = index
+        isPlaying = true
+        view?.render(.content(tracks: tracks, isPlaying: isPlaying, currentIndex: currentIndex))
     }
 
     func favoriteToggled(for trackId: String, isFavorite: Bool) {
-        _ = (trackId, isFavorite)
+        guard let index = tracks.firstIndex(where: { $0.id == trackId }) else { return }
+        tracks[index].isFavorite = isFavorite
+        view?.render(.content(tracks: tracks, isPlaying: isPlaying, currentIndex: currentIndex))
     }
 }
