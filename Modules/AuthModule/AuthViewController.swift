@@ -171,35 +171,20 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
     }
 
     func render(_ state: AuthViewState) {
+        let viewModel: AuthScreenViewModel
         switch state {
-        case .initial:
-            emailField.configure(.init(title: "Email", placeholder: "user@example.com", text: "", errorText: nil))
-            passwordField.configure(.init(title: "Пароль", placeholder: "Введите пароль", text: "", errorText: nil))
-            errorLabel.alpha = 0
-            errorLabel.text = nil
-            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: true, isLoading: false))
+        case .initial(let model), .loading(let model), .content(let model), .error(let model):
+            viewModel = model
+        }
 
-        case .loading:
-            errorLabel.alpha = 0
-            emailField.setError(nil)
-            passwordField.setError(nil)
-            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: false, isLoading: true))
+        emailField.configure(viewModel.emailField)
+        passwordField.configure(viewModel.passwordField)
+        loginButton.configure(viewModel.loginButton)
+        errorLabel.text = viewModel.errorMessage
 
-        case .content(let email):
-            emailField.configure(.init(title: "Email", placeholder: "user@example.com", text: email, errorText: nil))
-            passwordField.configure(.init(title: "Пароль", placeholder: "Введите пароль", text: passwordField.text, errorText: nil))
-            errorLabel.alpha = 0
-            errorLabel.text = nil
-            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: true, isLoading: false))
-
-        case .error(let message):
-            emailField.setError(nil)
-            passwordField.setError(nil)
-            loginButton.configure(.init(title: "Войти", style: .primary, isEnabled: true, isLoading: false))
-            errorLabel.text = message
-            UIView.animate(withDuration: 0.25) {
-                self.errorLabel.alpha = 1
-            }
+        let targetAlpha: CGFloat = viewModel.errorMessage == nil ? 0 : 1
+        UIView.animate(withDuration: 0.25) {
+            self.errorLabel.alpha = targetAlpha
         }
     }
 

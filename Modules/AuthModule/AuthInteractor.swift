@@ -11,17 +11,17 @@ class AuthInteractor: AuthInteractorInput {
         Task {
             do {
                 await MainActor.run {
-                    self.presenter?.presentLoadingState()
+                    self.presenter?.presentLoadingState(email: email, password: password)
                 }
                 try Self.validate(email: email, password: password)
                 let response = try await service?.login(email: email, password: password)
                 guard let userId = response?.userId else { return }
                 await MainActor.run {
-                    presenter?.loginDidSucceed(userId: userId)
+                    presenter?.loginDidSucceed(userId: userId, email: email)
                 }
             } catch {
                 await MainActor.run {
-                    presenter?.loginDidFail(with: error)
+                    presenter?.loginDidFail(with: error, email: email, password: password)
                 }
             }
         }

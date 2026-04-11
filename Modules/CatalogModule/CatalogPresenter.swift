@@ -51,7 +51,13 @@ class CatalogPresenter: CatalogInteractorOutput {
                 title: item.title,
                 subtitle: item.subtitle,
                 rightText: item.detailLine,
-                imageURL: item.artworkURL
+                imageURL: item.artworkURL,
+                cellConfiguration: .init(
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    trailingText: item.detailLine,
+                    icon: .playlist
+                )
             )
         }
     }

@@ -8,14 +8,13 @@ final class CatalogListManager: NSObject {
     weak var delegate: CatalogListManagerDelegate?
 
     private weak var tableView: UITableView?
-    private let imageLoader: ImageLoading
     private var items: [PlaylistCellViewModel] = []
 
     init(tableView: UITableView, imageLoader: ImageLoading) {
         self.tableView = tableView
-        self.imageLoader = imageLoader
+        _ = imageLoader
         super.init()
-        tableView.register(PlaylistTableViewCell.self, forCellReuseIdentifier: PlaylistTableViewCell.reuseIdentifier)
+        tableView.register(DSListItemCell.self, forCellReuseIdentifier: DSListItemCell.reuseIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
@@ -38,12 +37,12 @@ extension CatalogListManager: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: PlaylistTableViewCell.reuseIdentifier,
+            withIdentifier: DSListItemCell.reuseIdentifier,
             for: indexPath
-        ) as? PlaylistTableViewCell else {
+        ) as? DSListItemCell else {
             return UITableViewCell()
         }
-        cell.configure(with: items[indexPath.row], imageLoader: imageLoader)
+        cell.configure(with: items[indexPath.row].cellConfiguration)
         return cell
     }
 }
