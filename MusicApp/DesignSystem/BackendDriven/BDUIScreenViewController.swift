@@ -3,18 +3,37 @@ import UIKit
 final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
     private let service: BDUIScreenProviding
     private let mapper: BDUIViewMapping
-    private let screenPath: String
+    private let descriptor: BDUIScreenDescriptor
 
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
-    private let stateView = DSStateView()
+    private lazy var scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alwaysBounceVertical = true
+        return view
+    }()
+
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var stateView: DSStateView = {
+        let view = DSStateView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        view.actionHandler = { [weak self] in
+            self?.loadScreen()
+        }
+        return view
+    }()
 
     init(
-        screenPath: String,
+        descriptor: BDUIScreenDescriptor,
         service: BDUIScreenProviding = EchoBDUIService(),
         mapper: BDUIViewMapping = BDUIViewMapper()
     ) {
-        self.screenPath = screenPath
+        self.descriptor = descriptor
         self.service = service
         self.mapper = mapper
         super.init(nibName: nil, bundle: nil)
@@ -30,18 +49,7 @@ final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
 
     private func setupUI() {
         view.backgroundColor = DS.Colors.background
-        title = "BDUI Demo"
-
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.alwaysBounceVertical = true
-
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-
-        stateView.translatesAutoresizingMaskIntoConstraints = false
-        stateView.isHidden = true
-        stateView.actionHandler = { [weak self] in
-            self?.loadScreen()
-        }
+        title = descriptor.title
 
         view.addSubview(scrollView)
         view.addSubview(stateView)
@@ -74,7 +82,7 @@ final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
         Task { [weak self] in
             guard let self else { return }
             do {
-                let node = try await service.fetchScreen(path: screenPath)
+                let node = try await service.fetchScreen(path: descriptor.path)
                 let renderedView = mapper.makeView(from: node, actionHandler: self)
                 await MainActor.run {
                     self.renderScreen(renderedView)
