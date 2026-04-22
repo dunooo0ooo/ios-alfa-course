@@ -4,6 +4,7 @@ protocol CatalogInteractorInput {
     func retryLoadCatalog()
     func searchQueryDidChange(_ query: String)
     func didSelectTrack(id: String, title: String, subtitle: String?)
+    func didTapOpenBDUIDemo()
     func didTapLogout()
 }
 
@@ -15,5 +16,6 @@ protocol CatalogInteractorOutput: AnyObject {
     func catalogLoadFailed(with error: Error)
     func catalogRefreshDidCancel()
     func openTrackDetail(id: String, title: String, subtitle: String?)
+    func openBDUIScreen()
     func openAuthModule()
 }

@@ -90,6 +90,10 @@ class CatalogInteractor: CatalogInteractorInput {
         presenter?.openTrackDetail(id: id, title: title, subtitle: subtitle)
     }
 
+    func didTapOpenBDUIDemo() {
+        presenter?.openBDUIScreen()
+    }
+
     func didTapLogout() {
         presenter?.openAuthModule()
     }

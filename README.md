@@ -11,7 +11,7 @@
 
 - делаем run приложения
 - правильные данные для входа захардкожены (login: user@example.com, password: password123)
-- после успешного входа происходит переход на страницу со списком плейлистов (CatalogViewController)
+- после успешного входа происходит переход на страницу со списком треков (`CatalogViewController`)
 - если были предоставлены неправильные даннные, то получаем сообщение с ошибкой
 
 ## AuthModule  
@@ -49,13 +49,13 @@ enum AuthViewState: Equatable {
 ---
 
 ## CatalogModule  
-Каталог музыки: рекомендации, популярные плейлисты, альбомы, артисты
+Каталог музыки: список треков/релизов, полученных из API
 
 ### Вход  
 - `userId: String` — идентификатор пользователя (передаётся после авторизации)
 
 ### Выход  
-- `didSelectPlaylist(_ playlistId: String)` - пользователь выбрал плейлист  
+- `didSelectTrack(...)` - пользователь выбрал трек  
 - `didLogout()` — пользователь нажал "Выйти"
 
 ### Состояния UI  
@@ -77,8 +77,8 @@ enum CatalogViewState: Equatable {
 2. **Данные загружены успешно**  
    - Состояние: `.content([PlaylistCellViewModel])`  
    - В UI-слое только готовые ячейки (без DTO и парсинга)  
-3. **Пользователь выбирает плейлист**  
-   - Вызывается `interactor.didSelectPlaylist(playlistId)`  
+3. **Пользователь выбирает трек**  
+   - Вызывается `interactor.didSelectTrack(id:title:subtitle:)`  
    - Router открывает `PlaylistDetailModule`  
 4. **Пользователь нажимает "Выйти"**  
    - Вызывается `interactor.didTapLogout()`  
@@ -123,7 +123,7 @@ enum CatalogViewState: Equatable {
 
 ### Лабораторная 5 — список UIKit + компоненты
 
-**Подход к списку:** `UITableView` + вынесенный **`CatalogListManager`** (`UITableViewDataSource` / `UITableViewDelegate`), отдельная ячейка **`PlaylistTableViewCell`** с `reuseIdentifier`, конфигурация только из **`PlaylistCellViewModel`**. Таблица не пересобирается «с нуля» при каждом изменении: обновляется модель в менеджере и вызывается `reloadData()` (разумный компромисс без Diffable).
+**Подход к списку:** `UITableView` + вынесенный **`CatalogListManager`** (`UITableViewDataSource` / `UITableViewDelegate`), переиспользуемая DS-ячейка **`DSListItemCell`**, которая конфигурируется через `DSListItemCellViewModel` из `PlaylistCellViewModel`. Таблица не пересобирается «с нуля» при каждом изменении: обновляется модель в менеджере и вызывается `reloadData()` (разумный компромисс без Diffable).
 
 **Дополнительно из блока:**
 - **D2** — **поиск:** `UISearchBar`, фильтрация по уже загруженным `CatalogListItem` без повторного запроса
@@ -159,12 +159,51 @@ enum CatalogViewState: Equatable {
 **Где применено:**
 - `AuthViewController` — поля ввода переведены на `DSTextField`, кнопка входа на `DSButton`, экран использует общие токены цветов/типографики/отступов
 - `CatalogViewController` — поиск, фон, навигация и состояния экрана приведены к DS; `loading / empty / error` показываются через `DSStateView`
-- `PlaylistTableViewCell` — ячейка списка использует DS-токены для шрифтов, цветов и иконки
+- `DSListItemCell` — общая DS-ячейка списка, использующая токены цветов, типографики и иконок
 
 **Дополнительные задания по лабе 6:**
 - `D3. TextStyle` — реализован `DSTextStyle` и расширение `UILabel.apply(_:)` в `MusicApp/DesignSystem/DS.swift`
 - `D4. Компоненты форм` — реализован `DSTextField` с поддержкой `title`, `placeholder` и `error-state`
-- `D5. DS для списка` — `PlaylistTableViewCell` сделана переиспользуемой ячейкой списка и оформлена через токены дизайн-системы
+- `D5. DS для списка` — `DSListItemCell` сделана общей переиспользуемой ячейкой списка и оформлена через токены дизайн-системы
+
+### Лабораторная 7 — Backend Driven UI
+
+**Где лежит:**
+- `MusicApp/DesignSystem/BackendDriven/BDUIModel.swift` — декодируемая recursive-модель BDUI
+- `MusicApp/DesignSystem/BackendDriven/BDUIViewMapper.swift` — generic mapper под протоколом `BDUIViewMapping`
+- `MusicApp/DesignSystem/BackendDriven/BDUIService.swift` — загрузка JSON-конфига с Echo API по стратегии `remote-first` и fallback на bundled/inline JSON
+- `MusicApp/DesignSystem/BackendDriven/BDUIScreenViewController.swift` — экран, который получает JSON, маппит его в `UIView` и показывает без дополнительной ручной донастройки
+
+**Что поддерживает модель:**
+- `container`
+- `stack`
+- `label`
+- `button`
+- `image`
+- `spacer`
+
+**Что умеет JSON-модель:**
+- рекурсивно описывать вложенные вью и сабвью
+- декодироваться из JSON
+- задавать axis / spacing / alignment / distribution для stack view
+- задавать DS-токены цветов, типографики, отступов и скруглений
+- задавать action для кнопок (`print`, `reload`, `navigateBack`)
+
+**Как открыть:**
+- войти в приложение
+- на экране каталога нажать кнопку `BDUI` в левом верхнем углу
+
+**Откуда грузится конфиг:**
+- основной путь: `https://alfaitmo.ru/server/echo/ios-alfa-course%2Fbdui%2Fdemo`
+- если сервер недоступен, возвращает `404` или JSON не декодируется, используется fallback
+- bundled fallback: `MusicApp/bdui_demo_screen.json`
+- если bundled JSON недоступен, используется inline fallback, собранный прямо в `EchoBDUIService`
+
+**Как проверить через Echo API:**
+- отправить свой JSON на путь `ios-alfa-course/bdui/demo`
+- затем открыть экран `BDUI` в приложении
+- экран попытается загрузиться с сервера первым, а при проблеме с сетью или отсутствующем конфиге откроется локальный fallback
+- экран будет полностью собран через mapper из полученной JSON-модели без дополнительной ручной настройки после маппера
 ---
 
 ## PlaylistDetailModule  

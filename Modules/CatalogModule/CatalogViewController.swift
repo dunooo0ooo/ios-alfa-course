@@ -70,10 +70,16 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
 
     private func setupUI() {
         view.backgroundColor = DS.Colors.background
-        title = "Подборка плейлистов"
+        title = "Подборка треков"
 
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = DS.Colors.primary
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "BDUI",
+            style: .plain,
+            target: self,
+            action: #selector(bduiTapped)
+        )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Выйти",
             style: .plain,
@@ -114,6 +120,10 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         interactor?.didTapLogout()
     }
 
+    @objc private func bduiTapped() {
+        interactor?.didTapOpenBDUIDemo()
+    }
+
     @objc private func retryTapped() {
         interactor?.retryLoadCatalog()
     }
@@ -152,7 +162,7 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
             break
         case .loading:
             stateView.isHidden = false
-            stateView.render(.loading(title: "Загружаем плейлисты", subtitle: "Подождите пару секунд"))
+            stateView.render(.loading(title: "Загружаем треки", subtitle: "Подождите пару секунд"))
             tableView.isHidden = true
         case .content(let items):
             stateView.isHidden = true

@@ -2,6 +2,7 @@ import UIKit
 
 final class CatalogRouter: CatalogRouterInput {
     weak var viewController: UIViewController?
+    private let bduiDemoPath = "ios-alfa-course/bdui/demo"
 
     func openTrackDetail(id: String, title: String, subtitle: String?) {
         guard let navigationController = viewController?.navigationController else { return }
@@ -33,5 +34,10 @@ final class CatalogRouter: CatalogRouterInput {
 
     func openAuthModule() {
         viewController?.navigationController?.popToRootViewController(animated: true)
+    }
+
+    func openBDUIScreen() {
+        let controller = BDUIScreenViewController(screenPath: bduiDemoPath)
+        viewController?.navigationController?.pushViewController(controller, animated: true)
     }
 }
