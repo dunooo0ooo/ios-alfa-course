@@ -69,13 +69,6 @@
                     "textStyle": "bodyStrong"
                   }
                 },
-                {
-                  "type": "label",
-                  "content": {
-                    "text": "Экран трека открыт через универсальный BDUI-модуль. Название и артист подставляются в шаблон через конфигурацию экрана.",
-                    "textStyle": "subheadline"
-                  }
-                }
               ]
             }
           ]
@@ -83,7 +76,7 @@
         {
           "type": "button",
           "content": {
-            "text": "Вывести в консоль: {{trackTitle}}",
+            "text": "{{trackTitle}}",
             "buttonStyle": "secondary",
             "action": {
               "type": "print",
