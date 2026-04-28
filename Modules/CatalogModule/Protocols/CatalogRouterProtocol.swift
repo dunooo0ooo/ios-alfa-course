@@ -1,6 +1,5 @@
 
 protocol CatalogRouterInput {
-    func openTrackDetail(id: String, title: String, subtitle: String?)
-    func openBDUIScreen()
+    func openBDUIScreen(configuration: BDUIScreenConfiguration)
     func openAuthModule()
 }

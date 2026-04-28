@@ -37,11 +37,15 @@ class CatalogPresenter: CatalogInteractorOutput {
     }
 
     func openTrackDetail(id: String, title: String, subtitle: String?) {
-        router?.openTrackDetail(id: id, title: title, subtitle: subtitle)
+        router?.openBDUIScreen(configuration: makeTrackScreenConfiguration(
+            id: id,
+            title: title,
+            subtitle: subtitle
+        ))
     }
 
     func openBDUIScreen() {
-        router?.openBDUIScreen()
+        router?.openBDUIScreen(configuration: makeCatalogScreenConfiguration())
     }
 
     func openAuthModule() {
@@ -64,5 +68,34 @@ class CatalogPresenter: CatalogInteractorOutput {
                 )
             )
         }
+    }
+
+    private func makeCatalogScreenConfiguration() -> BDUIScreenConfiguration {
+        BDUIScreenConfiguration(
+            title: "BDUI Каталог",
+            source: .storage(key: "ios-alfa-course-bdui-catalog"),
+            fallbackResourceName: "bdui_catalog_screen",
+            loadingTitle: "Загружаем BDUI каталог",
+            loadingSubtitle: "Получаем длинный экран со скроллом"
+        )
+    }
+
+    private func makeTrackScreenConfiguration(
+        id: String,
+        title: String,
+        subtitle: String?
+    ) -> BDUIScreenConfiguration {
+        BDUIScreenConfiguration(
+            title: title,
+            source: .storage(key: "ios-alfa-course-bdui-track"),
+            fallbackResourceName: "bdui_track_screen",
+            loadingTitle: "Открываем трек",
+            loadingSubtitle: "Загружаем экран для выбранного элемента",
+            templateValues: [
+                "trackId": id,
+                "trackTitle": title,
+                "trackSubtitle": subtitle ?? "Артист не указан"
+            ]
+        )
     }
 }

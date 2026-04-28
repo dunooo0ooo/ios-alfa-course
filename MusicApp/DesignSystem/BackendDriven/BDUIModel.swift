@@ -23,6 +23,14 @@ struct BDUIViewNode: Decodable, Equatable {
         content = try container.decodeIfPresent(BDUIViewContent.self, forKey: .content) ?? .init()
         subviews = try container.decodeIfPresent([BDUIViewNode].self, forKey: .subviews) ?? []
     }
+
+    func applying(templateValues: [String: String]) -> BDUIViewNode {
+        BDUIViewNode(
+            type: type,
+            content: content.applying(templateValues: templateValues),
+            subviews: subviews.map { $0.applying(templateValues: templateValues) }
+        )
+    }
 }
 
 enum BDUIViewType: String, Decodable, Equatable {
@@ -115,6 +123,25 @@ struct BDUIViewContent: Decodable, Equatable {
         width = try container.decodeIfPresent(CGFloat.self, forKey: .width)
         height = try container.decodeIfPresent(CGFloat.self, forKey: .height)
         action = try container.decodeIfPresent(BDUIAction.self, forKey: .action)
+    }
+
+    func applying(templateValues: [String: String]) -> BDUIViewContent {
+        BDUIViewContent(
+            text: text?.applying(templateValues: templateValues),
+            textStyle: textStyle,
+            buttonStyle: buttonStyle,
+            icon: icon,
+            axis: axis,
+            spacing: spacing,
+            alignment: alignment,
+            distribution: distribution,
+            backgroundColor: backgroundColor,
+            cornerRadius: cornerRadius,
+            padding: padding,
+            width: width,
+            height: height,
+            action: action?.applying(templateValues: templateValues)
+        )
     }
 }
 
@@ -301,6 +328,25 @@ enum BDUIAction: Decodable, Equatable {
             self = .reload
         case .navigateBack:
             self = .navigateBack
+        }
+    }
+
+    func applying(templateValues: [String: String]) -> BDUIAction {
+        switch self {
+        case .print(let message):
+            return .print(message: message.applying(templateValues: templateValues))
+        case .reload:
+            return .reload
+        case .navigateBack:
+            return .navigateBack
+        }
+    }
+}
+
+private extension String {
+    func applying(templateValues: [String: String]) -> String {
+        templateValues.reduce(into: self) { result, pair in
+            result = result.replacingOccurrences(of: "{{\(pair.key)}}", with: pair.value)
         }
     }
 }

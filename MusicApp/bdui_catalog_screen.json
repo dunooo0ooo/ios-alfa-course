@@ -1,0 +1,220 @@
+{
+  "type": "container",
+  "content": {
+    "backgroundColor": "clear",
+    "padding": {
+      "top": "large",
+      "leading": "large",
+      "bottom": "xxLarge",
+      "trailing": "large"
+    }
+  },
+  "subviews": [
+    {
+      "type": "stack",
+      "content": {
+        "axis": "vertical",
+        "spacing": "large",
+        "alignment": "fill"
+      },
+      "subviews": [
+        {
+          "type": "image",
+          "content": {
+            "icon": "playlist",
+            "backgroundColor": "primary",
+            "cornerRadius": "large",
+            "width": 180,
+            "height": 180
+          }
+        },
+        {
+          "type": "label",
+          "content": {
+            "text": "Каталог в BDUI",
+            "textStyle": "heroTitle"
+          }
+        },
+        {
+          "type": "label",
+          "content": {
+            "text": "Этот экран собирается универсальным маппером и демонстрирует длинный контент со скроллом.",
+            "textStyle": "body"
+          }
+        },
+        {
+          "type": "container",
+          "content": {
+            "backgroundColor": "surfaceElevated",
+            "cornerRadius": "regular",
+            "padding": {
+              "top": "large",
+              "leading": "large",
+              "bottom": "large",
+              "trailing": "large"
+            }
+          },
+          "subviews": [
+            {
+              "type": "stack",
+              "content": {
+                "axis": "vertical",
+                "spacing": "medium"
+              },
+              "subviews": [
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Почему это подходит под лабу 8",
+                    "textStyle": "bodyStrong"
+                  }
+                },
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Экран получает конфиг, по нему выбирает endpoint, загружает JSON и строит интерфейс через общий mapper.",
+                    "textStyle": "subheadline"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "content": {
+            "backgroundColor": "surface",
+            "cornerRadius": "regular",
+            "padding": {
+              "top": "large",
+              "leading": "large",
+              "bottom": "large",
+              "trailing": "large"
+            }
+          },
+          "subviews": [
+            {
+              "type": "stack",
+              "content": {
+                "axis": "vertical",
+                "spacing": "small"
+              },
+              "subviews": [
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Секция 1. Новинки",
+                    "textStyle": "bodyStrong"
+                  }
+                },
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Midnight Echo, Neon Rivers, Static Hearts, City Lights, Velvet Tape.",
+                    "textStyle": "subheadline"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "content": {
+            "backgroundColor": "surface",
+            "cornerRadius": "regular",
+            "padding": {
+              "top": "large",
+              "leading": "large",
+              "bottom": "large",
+              "trailing": "large"
+            }
+          },
+          "subviews": [
+            {
+              "type": "stack",
+              "content": {
+                "axis": "vertical",
+                "spacing": "small"
+              },
+              "subviews": [
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Секция 2. Рекомендации",
+                    "textStyle": "bodyStrong"
+                  }
+                },
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Подборка для проверки длинного контента, вертикального скролла и работы container + stack.",
+                    "textStyle": "subheadline"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "content": {
+            "backgroundColor": "surface",
+            "cornerRadius": "regular",
+            "padding": {
+              "top": "large",
+              "leading": "large",
+              "bottom": "large",
+              "trailing": "large"
+            }
+          },
+          "subviews": [
+            {
+              "type": "stack",
+              "content": {
+                "axis": "vertical",
+                "spacing": "small"
+              },
+              "subviews": [
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "Секция 3. Архитектура",
+                    "textStyle": "bodyStrong"
+                  }
+                },
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "ViewController только рендерит state, Interactor грузит JSON, Presenter управляет состояниями, Router открывает универсальный экран.",
+                    "textStyle": "subheadline"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "content": {
+            "text": "Перезагрузить экран",
+            "buttonStyle": "secondary",
+            "action": {
+              "type": "reload"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "content": {
+            "text": "Назад к каталогу",
+            "buttonStyle": "primary",
+            "action": {
+              "type": "navigateBack"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
