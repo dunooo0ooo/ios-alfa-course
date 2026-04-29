@@ -70,12 +70,18 @@ final class RemoteCatalogService: CatalogService, @unchecked Sendable {
 
         let rightText: String? = dto.year.flatMap { $0.isEmpty ? nil : $0 }
 
+        let artworkURL: URL? = {
+            if let raw = dto.coverImage, let url = URL(string: raw) { return url }
+            if let raw = dto.thumb, let url = URL(string: raw) { return url }
+            return nil
+        }()
+
         return CatalogListItem(
             id: id,
             title: parsed.title,
             subtitle: subtitle,
             detailLine: rightText,
-            artworkURL: nil
+            artworkURL: artworkURL
         )
     }
 

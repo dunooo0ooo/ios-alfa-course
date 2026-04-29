@@ -1,0 +1,100 @@
+{
+  "type": "container",
+  "content": {
+    "backgroundColor": "clear",
+    "padding": {
+      "top": "large",
+      "leading": "large",
+      "bottom": "xxLarge",
+      "trailing": "large"
+    }
+  },
+  "subviews": [
+    {
+      "type": "stack",
+      "content": {
+        "axis": "vertical",
+        "spacing": "large",
+        "alignment": "fill"
+      },
+      "subviews": [
+        {
+          "type": "image",
+          "content": {
+            "icon": "playlist",
+            "backgroundColor": "primary",
+            "cornerRadius": "large",
+            "width": 220,
+            "height": 220
+          }
+        },
+        {
+          "type": "label",
+          "content": {
+            "text": "{{trackTitle}}",
+            "textStyle": "heroTitle"
+          }
+        },
+        {
+          "type": "label",
+          "content": {
+            "text": "{{trackSubtitle}}",
+            "textStyle": "body"
+          }
+        },
+        {
+          "type": "container",
+          "content": {
+            "backgroundColor": "surfaceElevated",
+            "cornerRadius": "regular",
+            "padding": {
+              "top": "large",
+              "leading": "large",
+              "bottom": "large",
+              "trailing": "large"
+            }
+          },
+          "subviews": [
+            {
+              "type": "stack",
+              "content": {
+                "axis": "vertical",
+                "spacing": "medium"
+              },
+              "subviews": [
+                {
+                  "type": "label",
+                  "content": {
+                    "text": "О треке",
+                    "textStyle": "bodyStrong"
+                  }
+                },
+              ]
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "content": {
+            "text": "{{trackTitle}}",
+            "buttonStyle": "secondary",
+            "action": {
+              "type": "print",
+              "message": "Открыт трек: {{trackTitle}} — {{trackSubtitle}}"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "content": {
+            "text": "Назад к списку",
+            "buttonStyle": "primary",
+            "action": {
+              "type": "navigateBack"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

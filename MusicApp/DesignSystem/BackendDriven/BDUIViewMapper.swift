@@ -9,6 +9,12 @@ protocol BDUIActionHandling: AnyObject {
 }
 
 final class BDUIViewMapper: BDUIViewMapping {
+    private let imageLoader: ImageLoading?
+
+    init(imageLoader: ImageLoading? = ImageCacheService()) {
+        self.imageLoader = imageLoader
+    }
+
     func makeView(from node: BDUIViewNode, actionHandler: BDUIActionHandling?) -> UIView {
         switch node.type {
         case .container:
@@ -106,6 +112,17 @@ final class BDUIViewMapper: BDUIViewMapping {
         imageView.layer.cornerRadius = node.content.cornerRadius?.value ?? DS.Spacing.cornerRadius
         imageView.layer.cornerCurve = .continuous
         imageView.clipsToBounds = true
+
+        if let raw = node.content.imageURL, let url = URL(string: raw) {
+            imageLoader?.loadImage(from: url, bindTo: imageView) { [weak imageView] image in
+                guard let imageView else { return }
+                if let image {
+                    imageView.image = image
+                    imageView.tintColor = nil
+                }
+            }
+        }
+
         applySize(node.content, to: imageView)
         return imageView
     }

@@ -1,53 +1,81 @@
 import Foundation
 
 protocol BDUIScreenProviding {
-    func fetchScreen(path: String) async throws -> BDUIViewNode
+    func fetchScreen(configuration: BDUIScreenConfiguration) async throws -> BDUIViewNode
 }
 
-final class EchoBDUIService: BDUIScreenProviding {
+final class RemoteBDUIScreenService: BDUIScreenProviding {
+    private struct StorageResponse<T: Decodable>: Decodable {
+        let value: T
+    }
+
     enum FetchPolicy {
         case bundleFirst
         case remoteFirst
     }
 
     private let networkClient: NetworkClient
-    private let fallbackResourceName: String
     private let fetchPolicy: FetchPolicy
 
     init(
         networkClient: NetworkClient = URLSessionNetworkClient(),
-        fallbackResourceName: String = "bdui_demo_screen",
         fetchPolicy: FetchPolicy = .remoteFirst
     ) {
         self.networkClient = networkClient
-        self.fallbackResourceName = fallbackResourceName
         self.fetchPolicy = fetchPolicy
     }
 
-    func fetchScreen(path: String) async throws -> BDUIViewNode {
-        if fetchPolicy == .bundleFirst, let fallback = loadFallbackScreen() {
-            return fallback
+    func fetchScreen(configuration: BDUIScreenConfiguration) async throws -> BDUIViewNode {
+        if fetchPolicy == .bundleFirst, let fallback = loadFallbackScreen(named: configuration.fallbackResourceName) {
+            return fallback.applying(templateValues: configuration.templateValues)
         }
 
-        var allowedCharacters = CharacterSet.urlPathAllowed
-        allowedCharacters.remove(charactersIn: "/")
-        guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: allowedCharacters),
-              let url = URL(string: "https://alfaitmo.ru/server/echo/\(encodedPath)") else {
+        guard let url = makeURL(for: configuration.source) else {
             throw NetworkError.invalidURL
         }
 
         do {
-            return try await networkClient.get(url)
+            let node: BDUIViewNode
+            switch configuration.source {
+            case .echo:
+                node = try await networkClient.get(url)
+            case .storage:
+                let response: StorageResponse<BDUIViewNode> = try await networkClient.get(url)
+                node = response.value
+            case .url:
+                node = try await networkClient.get(url)
+            }
+            return node.applying(templateValues: configuration.templateValues)
         } catch {
-            if let fallback = loadFallbackScreen() {
-                return fallback
+            if let fallback = loadFallbackScreen(named: configuration.fallbackResourceName) {
+                return fallback.applying(templateValues: configuration.templateValues)
             }
             throw error
         }
     }
 
-    private func loadFallbackScreen() -> BDUIViewNode? {
-        guard let url = Bundle.main.url(forResource: fallbackResourceName, withExtension: "json"),
+    private func makeURL(for source: BDUIScreenConfiguration.Source) -> URL? {
+        switch source {
+        case .echo(let path):
+            var allowedCharacters = CharacterSet.urlPathAllowed
+            allowedCharacters.remove(charactersIn: "/")
+            guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: allowedCharacters) else {
+                return nil
+            }
+            return URL(string: "https://alfaitmo.ru/server/echo/\(encodedPath)")
+        case .storage(let key):
+            guard let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+                return nil
+            }
+            return URL(string: "https://alfa-itmo.ru/server/v1/storage/\(encodedKey)")
+        case .url(let url):
+            return url
+        }
+    }
+
+    private func loadFallbackScreen(named resourceName: String?) -> BDUIViewNode? {
+        guard let resourceName,
+              let url = Bundle.main.url(forResource: resourceName, withExtension: "json"),
               let data = try? Data(contentsOf: url) else {
             return makeInlineFallbackScreen()
         }
@@ -112,3 +140,5 @@ final class EchoBDUIService: BDUIScreenProviding {
         )
     }
 }
+
+typealias EchoBDUIService = RemoteBDUIScreenService

@@ -1,9 +1,9 @@
 import UIKit
 
-final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
-    private let service: BDUIScreenProviding
+final class BDUIScreenViewController: UIViewController, BDUIScreenView, BDUIActionHandling {
+    var presenter: BDUIScreenPresenterInput?
+
     private let mapper: BDUIViewMapping
-    private let descriptor: BDUIScreenDescriptor
 
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
@@ -23,18 +23,14 @@ final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
         view.actionHandler = { [weak self] in
-            self?.loadScreen()
+            self?.presenter?.didTapRetry()
         }
         return view
     }()
 
     init(
-        descriptor: BDUIScreenDescriptor,
-        service: BDUIScreenProviding = EchoBDUIService(),
         mapper: BDUIViewMapping = BDUIViewMapper()
     ) {
-        self.descriptor = descriptor
-        self.service = service
         self.mapper = mapper
         super.init(nibName: nil, bundle: nil)
     }
@@ -44,12 +40,12 @@ final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        loadScreen()
+        presenter?.didLoad()
     }
 
     private func setupUI() {
         view.backgroundColor = DS.Colors.background
-        title = descriptor.title
+        title = presenter?.title
 
         view.addSubview(scrollView)
         view.addSubview(stateView)
@@ -74,32 +70,6 @@ final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
         ])
     }
 
-    private func loadScreen() {
-        stateView.isHidden = false
-        stateView.render(.loading(title: "Загружаем BDUI", subtitle: "Получаем JSON и строим экран"))
-        removeRenderedSubviews()
-
-        Task { [weak self] in
-            guard let self else { return }
-            do {
-                let node = try await service.fetchScreen(path: descriptor.path)
-                let renderedView = mapper.makeView(from: node, actionHandler: self)
-                await MainActor.run {
-                    self.renderScreen(renderedView)
-                }
-            } catch {
-                await MainActor.run {
-                    self.stateView.isHidden = false
-                    self.stateView.render(.error(
-                        title: "Не удалось загрузить BDUI",
-                        subtitle: error.localizedDescription,
-                        actionTitle: "Повторить"
-                    ))
-                }
-            }
-        }
-    }
-
     private func renderScreen(_ renderedView: UIView) {
         removeRenderedSubviews()
         stateView.isHidden = true
@@ -117,14 +87,23 @@ final class BDUIScreenViewController: UIViewController, BDUIActionHandling {
         contentView.subviews.forEach { $0.removeFromSuperview() }
     }
 
-    func handle(action: BDUIAction) {
-        switch action {
-        case .print(let message):
-            print("BDUI action:", message)
-        case .reload:
-            loadScreen()
-        case .navigateBack:
-            navigationController?.popViewController(animated: true)
+    func render(_ state: BDUIScreenViewState) {
+        switch state {
+        case .loading(let title, let subtitle):
+            removeRenderedSubviews()
+            stateView.isHidden = false
+            stateView.render(.loading(title: title, subtitle: subtitle))
+        case .content(let node):
+            let renderedView = mapper.makeView(from: node, actionHandler: self)
+            renderScreen(renderedView)
+        case .error(let title, let subtitle, let actionTitle):
+            removeRenderedSubviews()
+            stateView.isHidden = false
+            stateView.render(.error(title: title, subtitle: subtitle, actionTitle: actionTitle))
         }
+    }
+
+    func handle(action: BDUIAction) {
+        presenter?.didTrigger(action: action)
     }
 }
