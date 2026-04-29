@@ -218,13 +218,14 @@ enum CatalogViewState: Equatable {
 - загрузка данных теперь зависит от конфига:
   - `source: .storage(key:)` — запрос по `https://alfa-itmo.ru/server/v1/storage/:key`
   - `source: .echo(path:)` — запрос по `https://alfaitmo.ru/server/echo/*path`
+  - `source: .url(URL)` — произвольный endpoint (для гибкой конфигурации без «гвоздей»)
 
 **Как сейчас используется в приложении:**
-- `CatalogPresenter` формирует конфиг экрана
+- `CatalogPresenter` формирует конфиг экрана и собирает BDUI-дерево каталога из данных API
 - `CatalogRouter` получает уже готовый `BDUIScreenConfiguration`
 - модуль открывается из каталога:
   - по кнопке `BDUI` — длинный BDUI-каталог
-  - по tap на строку — BDUI-экран конкретного трека
+  - сам `CatalogViewController` рендерит `BDUIViewNode` через `BDUIViewMapper` (без `UITableView`) и открывает трек через BDUI-action
 
 **Текущие конфиги:**
 - `BDUI Каталог`
@@ -245,6 +246,8 @@ enum CatalogViewState: Equatable {
 - сделано несколько вариаций BDUI-экранов:
   - BDUI-каталог
   - BDUI-экран трека
+- `CatalogModule` переведён на BDUI-рендер: контент каталога строится как `BDUIViewNode`-дерево из данных Discogs API
+- добавлена поддержка remote-картинок в BDUI `image` через `imageURL` + `ImageCacheService`
 ---
 
 ## PlaylistDetailModule  

@@ -4,6 +4,7 @@ struct BDUIScreenConfiguration: Equatable {
     enum Source: Equatable {
         case echo(path: String)
         case storage(key: String)
+        case url(URL)
     }
 
     let title: String

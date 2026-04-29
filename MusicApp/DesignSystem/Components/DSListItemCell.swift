@@ -9,12 +9,28 @@ struct DSListItemCellViewModel: Equatable, Sendable {
     let subtitle: String?
     let trailingText: String?
     let icon: Icon
+    let imageURL: URL?
+
+    init(
+        title: String,
+        subtitle: String?,
+        trailingText: String?,
+        icon: Icon,
+        imageURL: URL? = nil
+    ) {
+        self.title = title
+        self.subtitle = subtitle
+        self.trailingText = trailingText
+        self.icon = icon
+        self.imageURL = imageURL
+    }
 }
 
 class DSListItemCell: UITableViewCell {
     static let reuseIdentifier = "DSListItemCell"
 
     private var trailingLabel: UILabel?
+    private var imageLoader: ImageLoading?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,7 +43,9 @@ class DSListItemCell: UITableViewCell {
 
     required init?(coder: NSCoder) { nil }
 
-    func configure(with viewModel: DSListItemCellViewModel) {
+    func configure(with viewModel: DSListItemCellViewModel, imageLoader: ImageLoading?) {
+        self.imageLoader = imageLoader
+
         var content = defaultContentConfiguration()
         content.image = image(for: viewModel.icon)
         content.imageProperties.tintColor = DS.Colors.primary
@@ -47,6 +65,20 @@ class DSListItemCell: UITableViewCell {
         )
         contentConfiguration = content
 
+        imageLoader?.loadImage(from: viewModel.imageURL, bindTo: self) { [weak self] image in
+            guard let self else { return }
+            guard var updated = self.contentConfiguration as? UIListContentConfiguration else { return }
+            if let image {
+                updated.image = image
+                updated.imageProperties.tintColor = nil
+            } else {
+                updated.image = self.image(for: viewModel.icon)
+                updated.imageProperties.tintColor = DS.Colors.primary
+            }
+            updated.imageProperties.maximumSize = CGSize(width: 56, height: 56)
+            self.contentConfiguration = updated
+        }
+
         if let trailingText = viewModel.trailingText, !trailingText.isEmpty {
             let label = trailingLabel ?? makeTrailingLabel()
             label.text = trailingText
@@ -58,6 +90,7 @@ class DSListItemCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageLoader?.cancelLoad(for: self)
         contentConfiguration = nil
         accessoryView = nil
     }

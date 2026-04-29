@@ -5,6 +5,10 @@ protocol BDUIScreenProviding {
 }
 
 final class RemoteBDUIScreenService: BDUIScreenProviding {
+    private struct StorageResponse<T: Decodable>: Decodable {
+        let value: T
+    }
+
     enum FetchPolicy {
         case bundleFirst
         case remoteFirst
@@ -31,7 +35,16 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
         }
 
         do {
-            let node: BDUIViewNode = try await networkClient.get(url)
+            let node: BDUIViewNode
+            switch configuration.source {
+            case .echo:
+                node = try await networkClient.get(url)
+            case .storage:
+                let response: StorageResponse<BDUIViewNode> = try await networkClient.get(url)
+                node = response.value
+            case .url:
+                node = try await networkClient.get(url)
+            }
             return node.applying(templateValues: configuration.templateValues)
         } catch {
             if let fallback = loadFallbackScreen(named: configuration.fallbackResourceName) {
@@ -55,6 +68,8 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
                 return nil
             }
             return URL(string: "https://alfa-itmo.ru/server/v1/storage/\(encodedKey)")
+        case .url(let url):
+            return url
         }
     }
 

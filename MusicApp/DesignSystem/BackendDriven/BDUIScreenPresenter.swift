@@ -31,6 +31,8 @@ final class BDUIScreenPresenter: BDUIScreenPresenterInput, BDUIScreenInteractorO
             didTapRetry()
         case .navigateBack:
             router?.navigateBack()
+        case .selectTrack(let id, let title, let subtitle):
+            print("BDUI action: selectTrack", id, title, subtitle ?? "")
         }
     }
 

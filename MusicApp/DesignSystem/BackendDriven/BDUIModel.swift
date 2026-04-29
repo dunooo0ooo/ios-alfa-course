@@ -47,6 +47,7 @@ struct BDUIViewContent: Decodable, Equatable {
     let textStyle: BDUTextStyleToken?
     let buttonStyle: BDUButtonStyleToken?
     let icon: BDUIconToken?
+    let imageURL: String?
     let axis: BDUAxis?
     let spacing: BDUSpacingToken?
     let alignment: BDUStackAlignment?
@@ -63,6 +64,7 @@ struct BDUIViewContent: Decodable, Equatable {
         case textStyle
         case buttonStyle
         case icon
+        case imageURL
         case axis
         case spacing
         case alignment
@@ -80,6 +82,7 @@ struct BDUIViewContent: Decodable, Equatable {
         textStyle: BDUTextStyleToken? = nil,
         buttonStyle: BDUButtonStyleToken? = nil,
         icon: BDUIconToken? = nil,
+        imageURL: String? = nil,
         axis: BDUAxis? = nil,
         spacing: BDUSpacingToken? = nil,
         alignment: BDUStackAlignment? = nil,
@@ -95,6 +98,7 @@ struct BDUIViewContent: Decodable, Equatable {
         self.textStyle = textStyle
         self.buttonStyle = buttonStyle
         self.icon = icon
+        self.imageURL = imageURL
         self.axis = axis
         self.spacing = spacing
         self.alignment = alignment
@@ -113,6 +117,7 @@ struct BDUIViewContent: Decodable, Equatable {
         textStyle = try container.decodeIfPresent(BDUTextStyleToken.self, forKey: .textStyle)
         buttonStyle = try container.decodeIfPresent(BDUButtonStyleToken.self, forKey: .buttonStyle)
         icon = try container.decodeIfPresent(BDUIconToken.self, forKey: .icon)
+        imageURL = try container.decodeIfPresent(String.self, forKey: .imageURL)
         axis = try container.decodeIfPresent(BDUAxis.self, forKey: .axis)
         spacing = try container.decodeIfPresent(BDUSpacingToken.self, forKey: .spacing)
         alignment = try container.decodeIfPresent(BDUStackAlignment.self, forKey: .alignment)
@@ -131,6 +136,7 @@ struct BDUIViewContent: Decodable, Equatable {
             textStyle: textStyle,
             buttonStyle: buttonStyle,
             icon: icon,
+            imageURL: imageURL?.applying(templateValues: templateValues),
             axis: axis,
             spacing: spacing,
             alignment: alignment,
@@ -307,16 +313,21 @@ enum BDUIAction: Decodable, Equatable {
     case print(message: String)
     case reload
     case navigateBack
+    case selectTrack(id: String, title: String, subtitle: String?)
 
     private enum CodingKeys: String, CodingKey {
         case type
         case message
+        case id
+        case title
+        case subtitle
     }
 
     private enum ActionType: String, Decodable {
         case print
         case reload
         case navigateBack
+        case selectTrack
     }
 
     init(from decoder: Decoder) throws {
@@ -328,6 +339,12 @@ enum BDUIAction: Decodable, Equatable {
             self = .reload
         case .navigateBack:
             self = .navigateBack
+        case .selectTrack:
+            self = .selectTrack(
+                id: try container.decode(String.self, forKey: .id),
+                title: try container.decode(String.self, forKey: .title),
+                subtitle: try container.decodeIfPresent(String.self, forKey: .subtitle)
+            )
         }
     }
 
@@ -339,6 +356,12 @@ enum BDUIAction: Decodable, Equatable {
             return .reload
         case .navigateBack:
             return .navigateBack
+        case .selectTrack(let id, let title, let subtitle):
+            return .selectTrack(
+                id: id.applying(templateValues: templateValues),
+                title: title.applying(templateValues: templateValues),
+                subtitle: subtitle?.applying(templateValues: templateValues)
+            )
         }
     }
 }

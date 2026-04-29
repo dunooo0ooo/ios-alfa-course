@@ -9,10 +9,11 @@ final class CatalogListManager: NSObject {
 
     private weak var tableView: UITableView?
     private var items: [PlaylistCellViewModel] = []
+    private let imageLoader: ImageLoading
 
     init(tableView: UITableView, imageLoader: ImageLoading) {
         self.tableView = tableView
-        _ = imageLoader
+        self.imageLoader = imageLoader
         super.init()
         tableView.register(DSListItemCell.self, forCellReuseIdentifier: DSListItemCell.reuseIdentifier)
         tableView.dataSource = self
@@ -42,7 +43,7 @@ extension CatalogListManager: UITableViewDataSource {
         ) as? DSListItemCell else {
             return UITableViewCell()
         }
-        cell.configure(with: items[indexPath.row].cellConfiguration)
+        cell.configure(with: items[indexPath.row].cellConfiguration, imageLoader: imageLoader)
         return cell
     }
 }

@@ -1,3 +1,5 @@
+import Foundation
+
 class CatalogPresenter: CatalogInteractorOutput {
     weak var view: CatalogView?
     var router: CatalogRouterInput?
@@ -12,7 +14,7 @@ class CatalogPresenter: CatalogInteractorOutput {
 
     func catalogDidLoad(_ items: [CatalogListItem]) {
         view?.setRefreshing(false)
-        view?.render(.content(makeCellViewModels(from: items)))
+        view?.render(.content(makeCatalogNode(from: items)))
     }
 
     func catalogServerReturnedNoData() {
@@ -52,22 +54,70 @@ class CatalogPresenter: CatalogInteractorOutput {
         router?.openAuthModule()
     }
 
-    private func makeCellViewModels(from items: [CatalogListItem]) -> [PlaylistCellViewModel] {
-        items.map { item in
-            PlaylistCellViewModel(
-                id: item.id,
-                title: item.title,
-                subtitle: item.subtitle,
-                rightText: item.detailLine,
-                imageURL: item.artworkURL,
-                cellConfiguration: .init(
-                    title: item.title,
-                    subtitle: item.subtitle,
-                    trailingText: item.detailLine,
-                    icon: .playlist
-                )
+    private func makeCatalogNode(from items: [CatalogListItem]) -> BDUIViewNode {
+        let cards: [BDUIViewNode] = items.map { item in
+            BDUIViewNode(
+                type: .container,
+                content: .init(
+                    backgroundColor: .surfaceElevated,
+                    cornerRadius: .regular,
+                    padding: .init(top: .large, leading: .large, bottom: .large, trailing: .large)
+                ),
+                subviews: [
+                    BDUIViewNode(
+                        type: .stack,
+                        content: .init(axis: .vertical, spacing: .medium, alignment: .fill),
+                        subviews: [
+                            BDUIViewNode(
+                                type: .image,
+                                content: .init(
+                                    icon: .playlist,
+                                    imageURL: item.artworkURL?.absoluteString,
+                                    backgroundColor: .surface,
+                                    cornerRadius: .large,
+                                    width: 220,
+                                    height: 220
+                                )
+                            ),
+                            BDUIViewNode(
+                                type: .label,
+                                content: .init(
+                                    text: item.title,
+                                    textStyle: .bodyStrong
+                                )
+                            ),
+                            BDUIViewNode(
+                                type: .label,
+                                content: .init(
+                                    text: item.subtitle ?? "",
+                                    textStyle: .subheadline
+                                )
+                            ),
+                            BDUIViewNode(
+                                type: .button,
+                                content: .init(
+                                    text: "Открыть",
+                                    buttonStyle: .primary,
+                                    action: .selectTrack(id: item.id, title: item.title, subtitle: item.subtitle)
+                                )
+                            )
+                        ]
+                    )
+                ]
             )
         }
+
+        return BDUIViewNode(
+            type: .container,
+            content: .init(backgroundColor: .clear),
+            subviews: [
+                BDUIViewNode(
+                    type: .stack,
+                    content: .init(axis: .vertical, spacing: .large, alignment: .fill),
+                    subviews: cards
+                )
+            ]
+        )
     }
 
     private func makeCatalogScreenConfiguration() -> BDUIScreenConfiguration {
