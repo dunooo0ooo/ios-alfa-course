@@ -5,7 +5,7 @@ class AuthRouter: AuthRouterInput {
     
     func openCatalogModule(with userId: String) {
         let catalogVC = CatalogViewController()
-        catalogVC.title = "Подборка плейлистов"
+        catalogVC.title = "Подборка треков"
         catalogVC.catalogUserId = userId
         catalogVC.imageLoader = ImageCacheService()
 

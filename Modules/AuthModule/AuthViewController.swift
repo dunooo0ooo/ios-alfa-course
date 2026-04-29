@@ -30,7 +30,7 @@ final class AuthViewController: UIViewController, AuthView, UITextFieldDelegate 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.apply(.body)
         label.numberOfLines = 0
-        label.text = "Войдите, чтобы открыть подборку плейлистов и перейти к списку релизов."
+        label.text = "Войдите, чтобы открыть подборку треков и перейти к списку релизов."
         return label
     }()
 

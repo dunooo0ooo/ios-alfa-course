@@ -34,4 +34,9 @@ final class CatalogRouter: CatalogRouterInput {
     func openAuthModule() {
         viewController?.navigationController?.popToRootViewController(animated: true)
     }
+
+    func openBDUIScreen() {
+        let controller = BDUIScreenViewController(descriptor: .demo)
+        viewController?.navigationController?.pushViewController(controller, animated: true)
+    }
 }

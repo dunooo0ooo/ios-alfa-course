@@ -260,15 +260,6 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		8E30AA212F8200210053F573 /* Image */ = {
-			isa = PBXGroup;
-			children = (
-				8E30AA012F8200010053F573 /* ImageLoading.swift */,
-				8E30AA022F8200020053F573 /* ImageCacheService.swift */,
-			);
-			path = Image;
-			sourceTree = "<group>";
-		};
 		8D6E4F162F5F152A0070EDE3 /* AuthModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -372,6 +363,15 @@
 				8DABAA012F7200010053F573 /* NetworkClient.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		8E30AA212F8200210053F573 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				8E30AA012F8200010053F573 /* ImageLoading.swift */,
+				8E30AA022F8200020053F573 /* ImageCacheService.swift */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -516,7 +516,6 @@
 				INFOPLIST_FILE = MusicApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -547,7 +546,6 @@
 				INFOPLIST_FILE = MusicApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

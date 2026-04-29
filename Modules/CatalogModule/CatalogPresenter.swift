@@ -40,6 +40,10 @@ class CatalogPresenter: CatalogInteractorOutput {
         router?.openTrackDetail(id: id, title: title, subtitle: subtitle)
     }
 
+    func openBDUIScreen() {
+        router?.openBDUIScreen()
+    }
+
     func openAuthModule() {
         router?.openAuthModule()
     }
