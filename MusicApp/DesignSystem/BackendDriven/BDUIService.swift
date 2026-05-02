@@ -41,7 +41,6 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
                 node = try await networkClient.get(url)
             case .echoPost(let bodyResourceName):
                 let json = try loadBundledJSON(named: bodyResourceName)
-                    .applying(templateValues: configuration.templateValues)
                 let body = Data(json.utf8)
                 node = try await networkClient.post(
                     url,
