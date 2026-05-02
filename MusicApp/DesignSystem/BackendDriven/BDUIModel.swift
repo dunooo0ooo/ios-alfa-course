@@ -313,21 +313,19 @@ enum BDUIAction: Decodable, Equatable {
     case print(message: String)
     case reload
     case navigateBack
-    case selectTrack(id: String, title: String, subtitle: String?)
+    case navigate(url: String)
 
     private enum CodingKeys: String, CodingKey {
         case type
         case message
-        case id
-        case title
-        case subtitle
+        case url
     }
 
     private enum ActionType: String, Decodable {
         case print
         case reload
         case navigateBack
-        case selectTrack
+        case navigate
     }
 
     init(from decoder: Decoder) throws {
@@ -339,12 +337,8 @@ enum BDUIAction: Decodable, Equatable {
             self = .reload
         case .navigateBack:
             self = .navigateBack
-        case .selectTrack:
-            self = .selectTrack(
-                id: try container.decode(String.self, forKey: .id),
-                title: try container.decode(String.self, forKey: .title),
-                subtitle: try container.decodeIfPresent(String.self, forKey: .subtitle)
-            )
+        case .navigate:
+            self = .navigate(url: try container.decode(String.self, forKey: .url))
         }
     }
 
@@ -356,12 +350,8 @@ enum BDUIAction: Decodable, Equatable {
             return .reload
         case .navigateBack:
             return .navigateBack
-        case .selectTrack(let id, let title, let subtitle):
-            return .selectTrack(
-                id: id.applying(templateValues: templateValues),
-                title: title.applying(templateValues: templateValues),
-                subtitle: subtitle?.applying(templateValues: templateValues)
-            )
+        case .navigate(let url):
+            return .navigate(url: url.applying(templateValues: templateValues))
         }
     }
 }

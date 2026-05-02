@@ -4,7 +4,8 @@ enum BDUIScreenAssembly {
     static func make(
         configuration: BDUIScreenConfiguration,
         service: BDUIScreenProviding = RemoteBDUIScreenService(),
-        mapper: BDUIViewMapping = BDUIViewMapper()
+        mapper: BDUIViewMapping = BDUIViewMapper(),
+        onAction: ((BDUIAction) -> Void)? = nil
     ) -> UIViewController {
         let viewController = BDUIScreenViewController(mapper: mapper)
         let presenter = BDUIScreenPresenter(configuration: configuration)
@@ -20,6 +21,7 @@ enum BDUIScreenAssembly {
         interactor.output = presenter
 
         router.viewController = viewController
+        router.onAction = onAction
 
         return viewController
     }

@@ -8,7 +8,7 @@ final class CatalogRouter: CatalogRouterInput {
     }
 
     func openBDUIScreen(configuration: BDUIScreenConfiguration) {
-        let controller = BDUIScreenAssembly.make(configuration: configuration)
+        let controller = BDUIScreenAssembly.make(configuration: configuration, onAction: nil)
         viewController?.navigationController?.pushViewController(controller, animated: true)
     }
 }

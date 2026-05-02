@@ -39,6 +39,15 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
             switch configuration.source {
             case .echo:
                 node = try await networkClient.get(url)
+            case .echoPost(let bodyResourceName):
+                let json = try loadBundledJSON(named: bodyResourceName)
+                    .applying(templateValues: configuration.templateValues)
+                let body = Data(json.utf8)
+                node = try await networkClient.post(
+                    url,
+                    body: body,
+                    headers: ["Content-Type": "application/json; charset=utf-8"]
+                )
             case .storage:
                 let response: StorageResponse<BDUIViewNode> = try await networkClient.get(url)
                 node = response.value
@@ -63,6 +72,13 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
                 return nil
             }
             return URL(string: "https://alfaitmo.ru/server/echo/\(encodedPath)")
+        case .echoPost(let bodyResourceName):
+            var allowedCharacters = CharacterSet.urlPathAllowed
+            allowedCharacters.remove(charactersIn: "/")
+            guard let encodedPath = bodyResourceName.addingPercentEncoding(withAllowedCharacters: allowedCharacters) else {
+                return nil
+            }
+            return URL(string: "https://alfaitmo.ru/server/echo/\(encodedPath)")
         case .storage(let key):
             guard let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
                 return nil
@@ -80,6 +96,17 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
             return makeInlineFallbackScreen()
         }
         return (try? JSONDecoder().decode(BDUIViewNode.self, from: data)) ?? makeInlineFallbackScreen()
+    }
+
+    private func loadBundledJSON(named resourceName: String) throws -> String {
+        guard let url = Bundle.main.url(forResource: resourceName, withExtension: "json") else {
+            throw NetworkError.invalidResponse
+        }
+        let data = try Data(contentsOf: url)
+        guard let json = String(data: data, encoding: .utf8) else {
+            throw NetworkError.decodingFailed
+        }
+        return json
     }
 
     private func makeInlineFallbackScreen() -> BDUIViewNode {

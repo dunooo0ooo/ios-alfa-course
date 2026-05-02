@@ -1,10 +1,10 @@
 import UIKit
 
-final class CatalogViewController: UIViewController, CatalogView, UISearchBarDelegate, BDUIActionHandling {
+final class CatalogViewController: UIViewController, CatalogView, UISearchBarDelegate, CatalogListManagerDelegate {
     var interactor: CatalogInteractorInput?
     var catalogUserId: String?
     var imageLoader: ImageLoading = ImageCacheService()
-    private lazy var mapper: BDUIViewMapping = BDUIViewMapper(imageLoader: imageLoader)
+    private lazy var listManager = CatalogListManager(tableView: tableView, imageLoader: imageLoader)
 
     private lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
@@ -23,18 +23,13 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         return bar
     }()
 
-    private lazy var scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.alwaysBounceVertical = true
-        view.accessibilityIdentifier = "catalogScrollView"
-        return view
-    }()
-
-    private lazy var contentView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private lazy var tableView: UITableView = {
+        let table = UITableView(frame: .zero, style: .plain)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.backgroundColor = .clear
+        table.separatorStyle = .none
+        table.accessibilityIdentifier = "catalogTableView"
+        return table
     }()
 
     private lazy var refreshControl: UIRefreshControl = {
@@ -56,6 +51,7 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        listManager.delegate = self
 
         if let userId = catalogUserId {
             interactor?.loadCatalog(for: userId, isRefresh: false)
@@ -81,30 +77,23 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
             action: #selector(logoutTapped)
         )
 
-        scrollView.refreshControl = refreshControl
+        tableView.refreshControl = refreshControl
 
         view.addSubview(searchBar)
-        view.addSubview(scrollView)
+        view.addSubview(tableView)
         view.addSubview(stateView)
-        scrollView.addSubview(contentView)
 
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: DS.Spacing.small),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DS.Spacing.small),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DS.Spacing.small),
 
-            scrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: DS.Spacing.small),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: DS.Spacing.small),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 
-            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-
-            stateView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            stateView.topAnchor.constraint(equalTo: tableView.topAnchor),
             stateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stateView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -147,17 +136,8 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         }
     }
 
-    func handle(action: BDUIAction) {
-        switch action {
-        case .selectTrack(let id, let title, let subtitle):
-            interactor?.didSelectTrack(id: id, title: title, subtitle: subtitle)
-        case .reload:
-            retryTapped()
-        case .navigateBack:
-            navigationController?.popViewController(animated: true)
-        case .print(let message):
-            print("BDUI action:", message)
-        }
+    func catalogListManagerDidSelectItem(_ item: PlaylistCellViewModel) {
+        interactor?.didSelectTrack(id: item.id, title: item.title, subtitle: item.subtitle)
     }
 
     func render(_ state: CatalogViewState) {
@@ -165,40 +145,21 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         case .idle:
             break
         case .loading:
-            removeRenderedSubviews()
             stateView.isHidden = false
             stateView.render(.loading(title: "Загружаем треки", subtitle: "Подождите пару секунд"))
-            scrollView.isHidden = true
-        case .content(let node):
-            renderNode(node)
+            tableView.isHidden = true
+        case .content(let items):
+            listManager.setItems(items)
             stateView.isHidden = true
-            scrollView.isHidden = false
+            tableView.isHidden = false
         case .empty(let message):
-            removeRenderedSubviews()
             stateView.isHidden = false
             stateView.render(.empty(title: "Список пуст", subtitle: message))
-            scrollView.isHidden = true
+            tableView.isHidden = true
         case .error(let message):
-            removeRenderedSubviews()
             stateView.isHidden = false
             stateView.render(.error(title: "Не удалось загрузить список", subtitle: message, actionTitle: "Повторить"))
-            scrollView.isHidden = true
+            tableView.isHidden = true
         }
-    }
-
-    private func renderNode(_ node: BDUIViewNode) {
-        removeRenderedSubviews()
-        let renderedView = mapper.makeView(from: node, actionHandler: self)
-        contentView.addSubview(renderedView)
-        NSLayoutConstraint.activate([
-            renderedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: DS.Spacing.large),
-            renderedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: DS.Spacing.large),
-            renderedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -DS.Spacing.large),
-            renderedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -DS.Spacing.large),
-        ])
-    }
-
-    private func removeRenderedSubviews() {
-        contentView.subviews.forEach { $0.removeFromSuperview() }
     }
 }

@@ -22,4 +22,5 @@ protocol BDUIScreenInteractorOutput: AnyObject {
 
 protocol BDUIScreenRouterInput: AnyObject {
     func navigateBack()
+    func dispatch(action: BDUIAction)
 }

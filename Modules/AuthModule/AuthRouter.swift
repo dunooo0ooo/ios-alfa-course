@@ -14,10 +14,12 @@ class AuthRouter: AuthRouterInput {
         let router = CatalogRouter()
         let networkClient = URLSessionNetworkClient()
         let catalogService = RemoteCatalogService(networkClient: networkClient)
+        let bduiConfigurationProvider = DefaultBDUIScreenConfigurationProvider()
 
         catalogVC.interactor = interactor
         presenter.view = catalogVC
         presenter.router = router
+        presenter.bduiConfigurationProvider = bduiConfigurationProvider
 
         interactor.presenter = presenter
         interactor.service = catalogService
