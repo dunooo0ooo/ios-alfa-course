@@ -1,6 +1,9 @@
+import Foundation
+
 class CatalogPresenter: CatalogInteractorOutput {
     weak var view: CatalogView?
     var router: CatalogRouterInput?
+    var bduiConfigurationProvider: BDUIScreenConfigurationProviding = DefaultBDUIScreenConfigurationProvider()
 
     func catalogDidStartLoading(isRefresh: Bool) {
         if isRefresh {
@@ -12,7 +15,7 @@ class CatalogPresenter: CatalogInteractorOutput {
 
     func catalogDidLoad(_ items: [CatalogListItem]) {
         view?.setRefreshing(false)
-        view?.render(.content(makeCellViewModels(from: items)))
+        view?.render(.content(makeListViewModels(from: items)))
     }
 
     func catalogServerReturnedNoData() {
@@ -36,19 +39,19 @@ class CatalogPresenter: CatalogInteractorOutput {
         view?.setRefreshing(false)
     }
 
-    func openTrackDetail(id: String, title: String, subtitle: String?) {
-        router?.openTrackDetail(id: id, title: title, subtitle: subtitle)
+    func openTrackDetail() {
+        router?.openBDUIScreen(configuration: bduiConfigurationProvider.makeTrackDetailConfiguration())
     }
 
     func openBDUIScreen() {
-        router?.openBDUIScreen()
+        router?.openBDUIScreen(configuration: bduiConfigurationProvider.makeCatalogDemoConfiguration())
     }
 
     func openAuthModule() {
         router?.openAuthModule()
     }
 
-    private func makeCellViewModels(from items: [CatalogListItem]) -> [PlaylistCellViewModel] {
+    private func makeListViewModels(from items: [CatalogListItem]) -> [PlaylistCellViewModel] {
         items.map { item in
             PlaylistCellViewModel(
                 id: item.id,
@@ -56,11 +59,12 @@ class CatalogPresenter: CatalogInteractorOutput {
                 subtitle: item.subtitle,
                 rightText: item.detailLine,
                 imageURL: item.artworkURL,
-                cellConfiguration: .init(
+                cellConfiguration: DSListItemCellViewModel(
                     title: item.title,
                     subtitle: item.subtitle,
                     trailingText: item.detailLine,
-                    icon: .playlist
+                    icon: .playlist,
+                    imageURL: item.artworkURL
                 )
             )
         }

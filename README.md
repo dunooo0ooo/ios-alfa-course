@@ -139,7 +139,7 @@ enum CatalogViewState: Equatable {
 
 **Как увидеть error:** выключить сеть и зайти в каталог (или дождаться ошибки API); при наличии fallback из ЛР4 список может всё равно заполниться — тогда посмотреть сообщение об ошибке можно, временно отключив fallback в `RemoteCatalogService`.
 
-**По tap на строку:** `CatalogRouter` открывает **`PlaylistDetailViewController`**
+**По tap на строку:** `CatalogPresenter` формирует `BDUIScreenConfiguration` для трека, а `CatalogRouter` открывает универсальный **BDUI-экран трека**
 
 ### Лабораторная 6 — дизайн-система
 
@@ -171,8 +171,11 @@ enum CatalogViewState: Equatable {
 **Где лежит:**
 - `MusicApp/DesignSystem/BackendDriven/BDUIModel.swift` — декодируемая recursive-модель BDUI
 - `MusicApp/DesignSystem/BackendDriven/BDUIViewMapper.swift` — generic mapper под протоколом `BDUIViewMapping`
-- `MusicApp/DesignSystem/BackendDriven/BDUIService.swift` — загрузка JSON-конфига с Echo API по стратегии `remote-first` и fallback на bundled/inline JSON
-- `MusicApp/DesignSystem/BackendDriven/BDUIScreenViewController.swift` — экран, который получает JSON, маппит его в `UIView` и показывает без дополнительной ручной донастройки
+- `MusicApp/DesignSystem/BackendDriven/BDUIService.swift` — загрузка JSON-конфига по source-конфигурации и fallback на bundled/inline JSON
+- `MusicApp/DesignSystem/BackendDriven/BDUIScreenConfiguration.swift` — абстрактная конфигурация экрана (`title`, `source`, `fallback`, `loading`)
+- `MusicApp/DesignSystem/BackendDriven/BDUIScreenAssembly.swift` — сборка универсального BDUI-модуля
+- `MusicApp/DesignSystem/BackendDriven/BDUIScreenViewController.swift` — View-слой модуля, который только рендерит state и результат mapper
+- `MusicApp/DesignSystem/BackendDriven/BDUIScreenPresenter.swift` / `BDUIScreenInteractor.swift` / `BDUIScreenRouter.swift` — модульный слой экрана в той же архитектуре, что и остальное приложение
 
 **Что поддерживает модель:**
 - `container`
@@ -189,21 +192,62 @@ enum CatalogViewState: Equatable {
 - задавать DS-токены цветов, типографики, отступов и скруглений
 - задавать action для кнопок (`print`, `reload`, `navigateBack`)
 
+**Как устроено:**
+- `RemoteBDUIScreenService` загружает JSON-конфиг
+- `JSONDecoder` декодирует его в `BDUIViewNode`
+- `BDUIViewMapper` рекурсивно превращает модель в `UIView`
+- `BDUIScreenViewController` только показывает состояния и готовую вью, не содержит сетевой логики
+
 **Как открыть:**
 - войти в приложение
-- на экране каталога нажать кнопку `BDUI` в левом верхнем углу
+- на экране каталога нажать кнопку `BDUI` в левом верхнем углу, чтобы открыть длинный BDUI-каталог
+- или нажать на конкретный трек в таблице, чтобы открыть BDUI-экран трека
 
 **Откуда грузится конфиг:**
-- основной путь: `https://alfaitmo.ru/server/echo/ios-alfa-course%2Fbdui%2Fdemo`
-- если сервер недоступен, возвращает `404` или JSON не декодируется, используется fallback
+- источник задаётся через `BDUIScreenConfiguration.Source`
+- поддержаны `echo(path:)` и `storage(key:)`
+- если сервер недоступен, JSON не найден или не декодируется, используется fallback
 - bundled fallback: `MusicApp/bdui_demo_screen.json`
-- если bundled JSON недоступен, используется inline fallback, собранный прямо в `EchoBDUIService`
+- если bundled JSON недоступен, используется inline fallback, собранный прямо в сервисе
 
-**Как проверить через Echo API:**
-- отправить свой JSON на путь `ios-alfa-course/bdui/demo`
-- затем открыть экран `BDUI` в приложении
-- экран попытается загрузиться с сервера первым, а при проблеме с сетью или отсутствующем конфиге откроется локальный fallback
-- экран будет полностью собран через mapper из полученной JSON-модели без дополнительной ручной настройки после маппера
+### Лабораторная 8 — Универсальный экран на BDUI
+
+**Что добавлено:**
+- универсальный `BDUIScreenConfiguration`, который можно передать в экран из любого модуля
+- универсальный `BDUIScreenAssembly`, собирающий экран из `ViewController + Presenter + Interactor + Router`
+- загрузка данных теперь зависит от конфига:
+  - `source: .storage(key:)` — запрос по `https://alfa-itmo.ru/server/v1/storage/:key`
+  - `source: .echo(path:)` — запрос по `https://alfaitmo.ru/server/echo/*path`
+  - `source: .url(URL)` — произвольный endpoint (для гибкой конфигурации без «гвоздей»)
+
+**Как сейчас используется в приложении:**
+- `CatalogPresenter` формирует конфиг экрана и собирает BDUI-дерево каталога из данных API
+- `CatalogRouter` получает уже готовый `BDUIScreenConfiguration`
+- модуль открывается из каталога:
+  - по кнопке `BDUI` — длинный BDUI-каталог
+  - сам `CatalogViewController` рендерит `BDUIViewNode` через `BDUIViewMapper` (без `UITableView`) и открывает трек через BDUI-action
+
+**Текущие конфиги:**
+- `BDUI Каталог`
+  - `source`: `.storage(key: "ios-alfa-course-bdui-catalog")`
+  - `fallbackResourceName`: `bdui_catalog_screen`
+- `BDUI Трек`
+  - `source`: `.storage(key: "ios-alfa-course-bdui-track")`
+  - `fallbackResourceName`: `bdui_track_screen`
+  - `templateValues`: `trackTitle`, `trackSubtitle`, `trackId`
+
+**Почему экран универсальный:**
+- сам `BDUIScreenViewController` не знает ни про каталог, ни про треки, ни про конкретную фичу
+- экрану передаётся только абстрактный config
+- в зависимости от config меняется endpoint и способ загрузки JSON
+
+**Дополнительно по лабе 8:**
+- сделан сложный BDUI-экран каталога с длинным вертикальным контентом и скроллом
+- сделано несколько вариаций BDUI-экранов:
+  - BDUI-каталог
+  - BDUI-экран трека
+- `CatalogModule` переведён на BDUI-рендер: контент каталога строится как `BDUIViewNode`-дерево из данных Discogs API
+- добавлена поддержка remote-картинок в BDUI `image` через `imageURL` + `ImageCacheService`
 ---
 
 ## PlaylistDetailModule  
