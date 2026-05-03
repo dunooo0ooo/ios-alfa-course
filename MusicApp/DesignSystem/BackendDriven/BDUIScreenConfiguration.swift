@@ -2,9 +2,7 @@ import Foundation
 
 struct BDUIScreenConfiguration: Equatable {
     enum Source: Equatable {
-        /// GET из echo по path (старый режим).
         case echo(path: String)
-        /// POST'им JSON-конфиг на echo и декодируем отражённый ответ обратно в BDUI модель.
         case echoPost(bodyResourceName: String)
         case storage(key: String)
         case url(URL)
