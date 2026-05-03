@@ -58,6 +58,7 @@
 		8E30AA122F8200120053F573 /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA022F8200020053F573 /* ImageCacheService.swift */; };
 		8E30AA132F8200130053F573 /* CatalogListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA032F8200030053F573 /* CatalogListManager.swift */; };
 		8E30AA142F8200140053F573 /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E30AA042F8200040053F573 /* PlaylistTableViewCell.swift */; };
+		8FABEC022F9201020053F573 /* EchoAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FABEC012F9201010053F573 /* EchoAPIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,6 +114,7 @@
 		8E30AA022F8200020053F573 /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
 		8E30AA032F8200030053F573 /* CatalogListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogListManager.swift; sourceTree = "<group>"; };
 		8E30AA042F8200040053F573 /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
+		8FABEC012F9201010053F573 /* EchoAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EchoAPIService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -248,9 +250,18 @@
 			path = Modules;
 			sourceTree = "<group>";
 		};
+		8FABEC002F9201000053F573 /* Echo */ = {
+			isa = PBXGroup;
+			children = (
+				8FABEC012F9201010053F573 /* EchoAPIService.swift */,
+			);
+			path = Echo;
+			sourceTree = "<group>";
+		};
 		8D6E4F142F5F14E50070EDE3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				8FABEC002F9201000053F573 /* Echo */,
 				8DABAA132F72000A0053F573 /* Network */,
 				8E30AA212F8200210053F573 /* Image */,
 				8D9D6A692F659020009EA59C /* Playlist */,
@@ -451,6 +462,7 @@
 			files = (
 				8DABAA022F7200010053F573 /* NetworkClient.swift in Sources */,
 				8DABAA042F7200020053F573 /* NetworkError.swift in Sources */,
+				8FABEC022F9201020053F573 /* EchoAPIService.swift in Sources */,
 				8DABAA062F7200030053F573 /* URLSessionNetworkClient.swift in Sources */,
 				8DABAA082F7200040053F573 /* DiscogsSearchDTO.swift in Sources */,
 				8DABAA0A2F7200050053F573 /* RemoteCatalogService.swift in Sources */,

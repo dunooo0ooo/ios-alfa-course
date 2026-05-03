@@ -39,13 +39,8 @@ class CatalogPresenter: CatalogInteractorOutput {
         view?.setRefreshing(false)
     }
 
-    func openTrackDetail(id: String, title: String, subtitle: String?) {
-        let configuration = bduiConfigurationProvider.makeTrackDetailConfiguration(
-            id: id,
-            title: title,
-            subtitle: subtitle
-        )
-        router?.openBDUIScreen(configuration: configuration)
+    func openTrackDetail() {
+        router?.openBDUIScreen(configuration: bduiConfigurationProvider.makeTrackDetailConfiguration())
     }
 
     func openBDUIScreen() {

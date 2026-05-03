@@ -86,8 +86,8 @@ class CatalogInteractor: CatalogInteractorInput {
         }
     }
 
-    func didSelectTrack(id: String, title: String, subtitle: String?) {
-        presenter?.openTrackDetail(id: id, title: title, subtitle: subtitle)
+    func didSelectTrack() {
+        presenter?.openTrackDetail()
     }
 
     func didTapOpenBDUIDemo() {

@@ -15,77 +15,63 @@ final class RemoteBDUIScreenService: BDUIScreenProviding {
     }
 
     private let networkClient: NetworkClient
+    private let echoAPI: EchoAPIServiceProtocol
     private let fetchPolicy: FetchPolicy
 
     init(
         networkClient: NetworkClient = URLSessionNetworkClient(),
+        echoAPIService: EchoAPIServiceProtocol? = nil,
         fetchPolicy: FetchPolicy = .remoteFirst
     ) {
         self.networkClient = networkClient
+        self.echoAPI = echoAPIService ?? EchoAPIService(client: networkClient)
         self.fetchPolicy = fetchPolicy
     }
 
     func fetchScreen(configuration: BDUIScreenConfiguration) async throws -> BDUIViewNode {
         if fetchPolicy == .bundleFirst, let fallback = loadFallbackScreen(named: configuration.fallbackResourceName) {
-            return fallback.applying(templateValues: configuration.templateValues)
-        }
-
-        guard let url = makeURL(for: configuration.source) else {
-            throw NetworkError.invalidURL
+            return applyTemplateValuesIfNeeded(fallback, configuration: configuration)
         }
 
         do {
             let node: BDUIViewNode
             switch configuration.source {
-            case .echo:
-                node = try await networkClient.get(url)
+            case .echo(let path):
+                node = try await echoAPI.getJSON(BDUIViewNode.self, echoPath: path)
             case .echoPost(let bodyResourceName):
                 let json = try loadBundledJSON(named: bodyResourceName)
                 let body = Data(json.utf8)
-                node = try await networkClient.post(
-                    url,
-                    body: body,
-                    headers: ["Content-Type": "application/json; charset=utf-8"]
-                )
-            case .storage:
+                node = try await echoAPI.postJSON(body, echoPath: bodyResourceName)
+            case .storage(let key):
+                guard let url = makeStorageURL(key: key) else { throw NetworkError.invalidURL }
                 let response: StorageResponse<BDUIViewNode> = try await networkClient.get(url)
                 node = response.value
-            case .url:
+            case .url(let url):
                 node = try await networkClient.get(url)
             }
-            return node.applying(templateValues: configuration.templateValues)
+            return applyTemplateValuesIfNeeded(node, configuration: configuration)
         } catch {
             if let fallback = loadFallbackScreen(named: configuration.fallbackResourceName) {
-                return fallback.applying(templateValues: configuration.templateValues)
+                return applyTemplateValuesIfNeeded(fallback, configuration: configuration)
             }
             throw error
         }
     }
 
-    private func makeURL(for source: BDUIScreenConfiguration.Source) -> URL? {
-        switch source {
-        case .echo(let path):
-            var allowedCharacters = CharacterSet.urlPathAllowed
-            allowedCharacters.remove(charactersIn: "/")
-            guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: allowedCharacters) else {
-                return nil
-            }
-            return URL(string: "https://alfaitmo.ru/server/echo/\(encodedPath)")
-        case .echoPost(let bodyResourceName):
-            var allowedCharacters = CharacterSet.urlPathAllowed
-            allowedCharacters.remove(charactersIn: "/")
-            guard let encodedPath = bodyResourceName.addingPercentEncoding(withAllowedCharacters: allowedCharacters) else {
-                return nil
-            }
-            return URL(string: "https://alfaitmo.ru/server/echo/\(encodedPath)")
-        case .storage(let key):
-            guard let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-                return nil
-            }
-            return URL(string: "https://alfa-itmo.ru/server/v1/storage/\(encodedKey)")
-        case .url(let url):
-            return url
+    /// Подстановка `{{ключ}}` выполняется только если в конфигурации заданы `templateValues`; иначе узел не трогаем (например экран трека целиком из Echo GET).
+    private func applyTemplateValuesIfNeeded(
+        _ node: BDUIViewNode,
+        configuration: BDUIScreenConfiguration
+    ) -> BDUIViewNode {
+        guard !configuration.templateValues.isEmpty else { return node }
+        return node.applying(templateValues: configuration.templateValues)
+    }
+
+    private func makeStorageURL(key: String) -> URL? {
+        guard let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            return nil
         }
+        return URL(string: "https://alfa-itmo.ru/server/v1/storage/\(encodedKey)")
     }
 
     private func loadFallbackScreen(named resourceName: String?) -> BDUIViewNode? {

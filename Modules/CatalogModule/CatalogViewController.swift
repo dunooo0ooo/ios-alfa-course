@@ -136,8 +136,8 @@ final class CatalogViewController: UIViewController, CatalogView, UISearchBarDel
         }
     }
 
-    func catalogListManagerDidSelectItem(_ item: PlaylistCellViewModel) {
-        interactor?.didSelectTrack(id: item.id, title: item.title, subtitle: item.subtitle)
+    func catalogListManagerDidSelectItem(_: PlaylistCellViewModel) {
+        interactor?.didSelectTrack()
     }
 
     func render(_ state: CatalogViewState) {
